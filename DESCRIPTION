@@ -1,0 +1,22 @@
+Package: xapr
+Title: Access the Xapian search engine from R
+Description: xapr is a package that provides an interface to the
+    Xapian search engine from R, allowing both indexing and retrievel
+    operations. NOTE: The package is in a very early development phase
+    and not functional yet.
+Version: 0.0.1
+Authors@R: c(person("Stefan", "Widgren", role = c("aut", "cre"),
+    email = "stefan.widgren@gmail.com"))
+Depends:
+    R (>= 3.0.2)
+License: GPL (>= 2)
+URL: https://github.com/stewid/xapr
+Type: Package
+BugReports: https://github.com/stewid/xapr/issues
+LazyData: true
+Biarch: true
+NeedsCompilation: yes
+Date: 2014-09-12
+Collate:
+    'xapr.r'
+    'xapr_search.r'
