@@ -19,4 +19,3 @@ NeedsCompilation: yes
 Date: 2014-09-12
 Collate:
     'xapr.r'
-    'xapr_search.r'
