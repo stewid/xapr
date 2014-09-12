@@ -1,8 +1,10 @@
+[![Build Status](https://travis-ci.org/stewid/xapr.png)](https://travis-ci.org/stewid/xapr)
+
 # Introduction
 
 xapr is a package that aims to provide an interface to the
-[Xapian](xapian.org) search engine from R, allowing both indexing and
-retrievel operations.
+[Xapian](http://xapian.org/) search engine from R, allowing both
+indexing and retrievel operations.
 
 **NOTE:** The package is in a very early development phase and not
 functional yet.
@@ -23,4 +25,4 @@ install_github("stewid/xapr")
 The `xapr` package is licensed under the GPL (>= 2). See these files
 for additional details:
 
-- LICENSE     - `xapr` package license (GPLv2)
+- LICENSE     - `xapr` package license
