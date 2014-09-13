@@ -117,12 +117,15 @@ xapr_search(SEXP path, SEXP terms, SEXP offset, SEXP pagesize)
         SET_VECTOR_ELT(item, j++, ScalarInteger(i.get_percent()));
 
         setAttrib(item, R_NamesSymbol, names);
+        setAttrib(item, R_ClassSymbol, mkString("xapian_match"));
         SET_VECTOR_ELT(result, i.get_rank() - _offset, item);
         UNPROTECT(2);
     }
 
-    if (R_NilValue != result)
+    if (R_NilValue != result) {
+        setAttrib(result, R_ClassSymbol, mkString("xapian_search"));
         UNPROTECT(1);
+    }
 
     return result;
 }
