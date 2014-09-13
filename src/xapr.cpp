@@ -23,6 +23,43 @@
 using namespace Xapian;
 using namespace std;
 
+const char xapr_err_integer_gte_zero_arg[] =
+    "Error in '%s': '%s' must be an integer vector of length one with "
+    "a value greater than or equal to zero";
+
+/**
+ * Check integer argument and that arg is greater than or equal to 0.
+ *
+ * @param arg the arg to check
+ * @return true if OK, else false
+ */
+bool xapr_arg_check_integer(SEXP arg)
+{
+    if (R_NilValue == arg
+        || !isInteger(arg)
+        || 1 != length(arg)
+        || NA_INTEGER == INTEGER(arg)[0]
+        || 0 > INTEGER(arg)[0])
+        return false;
+    return true;
+}
+
+/**
+ * Raise error
+ *
+ * @param format C string that contains the text to be written to
+ * Rf_error
+ * @param func_name The name of the function that raise the error
+ * @param arg Optional text argument
+ */
+void xapr_error(const char *format, const char *func_name, const char *arg)
+{
+    if (arg)
+        Rf_error(format, func_name, arg);
+    else
+        Rf_error(format, func_name);
+}
+
 /*
  * Search a Xapian database
  *
@@ -33,16 +70,19 @@ using namespace std;
  * @param pagesize Number of records to retrieve
  * @return list with search result
  */
-
 extern "C" SEXP
 xapr_search(SEXP path, SEXP terms, SEXP offset, SEXP pagesize)
 {
     SEXP result = R_NilValue;
-    size_t n, _offset, _pagesize;
     vector<string> queryterms;
     Database databases;
 
-    n = length(path);
+    if (!xapr_arg_check_integer(offset))
+        xapr_error(xapr_err_integer_gte_zero_arg, "xapr_search", "offset");
+    if (!xapr_arg_check_integer(pagesize))
+        xapr_error(xapr_err_integer_gte_zero_arg, "xapr_search", "pagesize");
+
+    size_t n = length(path);
     for (size_t i = 0; i < n; ++i)
         databases.add_database(Database(CHAR(STRING_ELT(path, i))));
 
