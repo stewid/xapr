@@ -35,3 +35,17 @@ xapr_search <- function(path, terms, offset = 0, pagesize = 10)
         as.integer(pagesize),
         package = "xapr")
 }
+
+##' @export
+print.xapian_match <- function(x)
+{
+    cat(sprintf("%i: #%3.3i\n",
+                x$rank + 1,
+                x$docid))
+}
+
+##' @export
+print.xapian_search <- function(x)
+{
+    lapply(x, print)
+}
