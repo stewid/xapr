@@ -94,17 +94,21 @@ xapr_search(SEXP path, SEXP terms, SEXP offset, SEXP pagesize)
     Query query(Query::OP_OR, queryterms.begin(), queryterms.end());
     enquire.set_query(query);
 
-    _offset = INTEGER(offset)[0];
-    _pagesize = INTEGER(pagesize)[0];
+    size_t _offset = INTEGER(offset)[0];
+    size_t _pagesize = INTEGER(pagesize)[0];
     MSet matches = enquire.get_mset(_offset, _pagesize);
     MSetIterator i;
     PROTECT(result = allocVector(VECSXP, matches.size()));
     for (i = matches.begin(); i != matches.end(); ++i) {
+        const size_t n_items = 3;
         SEXP item, names;
         size_t j = 0;
 
-        PROTECT(item = allocVector(VECSXP, 2));
-        PROTECT(names = allocVector(STRSXP, 2));
+        PROTECT(item = allocVector(VECSXP, n_items));
+        PROTECT(names = allocVector(STRSXP, n_items));
+
+        SET_STRING_ELT(names, j, mkChar("docid"));
+        SET_VECTOR_ELT(item, j++, ScalarInteger(*i));
 
         SET_STRING_ELT(names, j, mkChar("rank"));
         SET_VECTOR_ELT(item, j++, ScalarInteger(i.get_rank()));
