@@ -143,13 +143,14 @@ xapr_search(SEXP path, SEXP terms, SEXP offset, SEXP pagesize)
  * Index a Xapian database
  *
  * @param path A character vector specifying the path to a Xapian databases.
+ * @param doc A character vector with data stored in the document.
  * @param filename A character vector specifying the filename(s) to index.
  * @param language Either the English name for the language or the two
  * letter ISO639 code.
  * @return R_NilValue
  */
 extern "C" SEXP
-xapr_index(SEXP path, SEXP filename, SEXP language)
+xapr_index(SEXP path, SEXP doc, SEXP filename, SEXP language)
 {
     // Open the database for update, creating a new database if necessary.
     WritableDatabase db(CHAR(STRING_ELT(path, 0)), DB_CREATE_OR_OPEN);
@@ -170,14 +171,14 @@ xapr_index(SEXP path, SEXP filename, SEXP language)
         buf.assign((istreambuf_iterator<char>(ifs)),
                    istreambuf_iterator<char>());
 
-        Document doc;
-        doc.set_data(CHAR(STRING_ELT(filename, i)));
+        Document document;
+        document.set_data(CHAR(STRING_ELT(doc, i)));
 
-        indexer.set_document(doc);
+        indexer.set_document(document);
         indexer.index_text(buf.c_str());
 
         // Add the document to the database.
-        db.add_document(doc);
+        db.add_document(document);
     }
 
     db.commit();

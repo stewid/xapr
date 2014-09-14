@@ -3,12 +3,12 @@
 \alias{xapr_index}
 \title{Index a Xapian database}
 \usage{
-xapr_index(path, filename, language = c("english", "en", "none", "danish",
-  "da", "dutch", "nl", "english_lovins", "lovins", "english_porter", "porter",
-  "finnish", "fi", "french", "fr", "german", "de", "german2", "hungarian", "hu",
-  "italian", "it", "kraaij_pohlmann", "norwegian", "nb", "nn", "no",
-  "portuguese", "pt", "romanian", "ro", "russian", "ru", "spanish", "es",
-  "swedish", "sv", "turkish", "tr"))
+xapr_index(path, doc, filename, language = c("english", "en", "none",
+  "danish", "da", "dutch", "nl", "english_lovins", "lovins", "english_porter",
+  "porter", "finnish", "fi", "french", "fr", "german", "de", "german2",
+  "hungarian", "hu", "italian", "it", "kraaij_pohlmann", "norwegian", "nb",
+  "nn", "no", "portuguese", "pt", "romanian", "ro", "russian", "ru", "spanish",
+  "es", "swedish", "sv", "turkish", "tr"))
 }
 \arguments{
 \item{path}{A character vector specifying the path to a Xapian
@@ -16,6 +16,8 @@ databases. If there is already a database in the specified
 directory, it will be opened. If there isn't an existing database
 in the specified directory, Xapian will try to create a new empty
 database there.}
+
+\item{doc}{A character vector with data stored in the document.}
 
 \item{filename}{A character vector specifying the file(s) to
 index.}

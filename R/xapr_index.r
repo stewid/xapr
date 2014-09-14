@@ -22,6 +22,7 @@
 ##' directory, it will be opened. If there isn't an existing database
 ##' in the specified directory, Xapian will try to create a new empty
 ##' database there.
+##' @param doc A character vector with data stored in the document.
 ##' @param filename A character vector specifying the file(s) to
 ##' index.
 ##' @param language Either the English name for the language or the
@@ -29,6 +30,7 @@
 ##' @return NULL
 ##' @export
 xapr_index <- function(path,
+                       doc,
                        filename,
                        language = c(
                            "english", "en",
@@ -56,6 +58,7 @@ xapr_index <- function(path,
     .Call(
         "xapr_index",
         path,
+        doc,
         filename,
         language,
         package = "xapr")
