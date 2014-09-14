@@ -17,9 +17,6 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <string>
-#include <fstream>
-#include <streambuf>
 #include <xapian.h>
 #include <Rinternals.h>
 
@@ -144,13 +141,13 @@ xapr_search(SEXP path, SEXP terms, SEXP offset, SEXP pagesize)
  *
  * @param path A character vector specifying the path to a Xapian databases.
  * @param doc A character vector with data stored in the document.
- * @param filename A character vector specifying the filename(s) to index.
+ * @param content A character vector with text to index.
  * @param language Either the English name for the language or the two
  * letter ISO639 code.
  * @return R_NilValue
  */
 extern "C" SEXP
-xapr_index(SEXP path, SEXP doc, SEXP filename, SEXP language)
+xapr_index(SEXP path, SEXP doc, SEXP content, SEXP language)
 {
     // Open the database for update, creating a new database if necessary.
     WritableDatabase db(CHAR(STRING_ELT(path, 0)), DB_CREATE_OR_OPEN);
@@ -159,23 +156,13 @@ xapr_index(SEXP path, SEXP doc, SEXP filename, SEXP language)
     Stem stemmer(CHAR(STRING_ELT(language, 0)));
     indexer.set_stemmer(stemmer);
 
-    size_t n = length(filename);
+    size_t n = length(content);
     for (size_t i = 0; i < n; ++i) {
-        ifstream ifs(CHAR(STRING_ELT(filename, i)));
-        string buf;
-
-        ifs.seekg(0, ios::end);
-        buf.reserve(ifs.tellg());
-        ifs.seekg(0, ios::beg);
-
-        buf.assign((istreambuf_iterator<char>(ifs)),
-                   istreambuf_iterator<char>());
-
         Document document;
         document.set_data(CHAR(STRING_ELT(doc, i)));
 
         indexer.set_document(document);
-        indexer.index_text(buf.c_str());
+        indexer.index_text(CHAR(STRING_ELT(content, i)));
 
         // Add the document to the database.
         db.add_document(document);
