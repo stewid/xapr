@@ -2,5 +2,6 @@
 
 S3method(print,xapian_match)
 S3method(print,xapian_search)
+export(xapr_index)
 export(xapr_search)
 useDynLib(xapr)

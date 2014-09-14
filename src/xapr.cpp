@@ -17,6 +17,9 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <string>
+#include <fstream>
+#include <streambuf>
 #include <xapian.h>
 #include <Rinternals.h>
 
@@ -100,7 +103,7 @@ xapr_search(SEXP path, SEXP terms, SEXP offset, SEXP pagesize)
     MSetIterator i;
     PROTECT(result = allocVector(VECSXP, matches.size()));
     for (i = matches.begin(); i != matches.end(); ++i) {
-        const size_t n_items = 3;
+        const size_t n_items = 4;
         SEXP item, names;
         size_t j = 0;
 
@@ -116,6 +119,12 @@ xapr_search(SEXP path, SEXP terms, SEXP offset, SEXP pagesize)
         SET_STRING_ELT(names, j, mkChar("percent"));
         SET_VECTOR_ELT(item, j++, ScalarInteger(i.get_percent()));
 
+        SET_STRING_ELT(names, j, mkChar("data"));
+        SET_VECTOR_ELT(
+            item,
+            j++,
+            ScalarString(mkChar(i.get_document().get_data().c_str())));
+
         setAttrib(item, R_NamesSymbol, names);
         setAttrib(item, R_ClassSymbol, mkString("xapian_match"));
         SET_VECTOR_ELT(result, i.get_rank() - _offset, item);
@@ -128,4 +137,50 @@ xapr_search(SEXP path, SEXP terms, SEXP offset, SEXP pagesize)
     }
 
     return result;
+}
+
+/**
+ * Index a Xapian database
+ *
+ * @param path A character vector specifying the path to a Xapian databases.
+ * @param filename A character vector specifying the filename(s) to index.
+ * @param language Either the English name for the language or the two
+ * letter ISO639 code.
+ * @return R_NilValue
+ */
+extern "C" SEXP
+xapr_index(SEXP path, SEXP filename, SEXP language)
+{
+    // Open the database for update, creating a new database if necessary.
+    WritableDatabase db(CHAR(STRING_ELT(path, 0)), DB_CREATE_OR_OPEN);
+
+    TermGenerator indexer;
+    Stem stemmer(CHAR(STRING_ELT(language, 0)));
+    indexer.set_stemmer(stemmer);
+
+    size_t n = length(filename);
+    for (size_t i = 0; i < n; ++i) {
+        ifstream ifs(CHAR(STRING_ELT(filename, i)));
+        string buf;
+
+        ifs.seekg(0, ios::end);
+        buf.reserve(ifs.tellg());
+        ifs.seekg(0, ios::beg);
+
+        buf.assign((istreambuf_iterator<char>(ifs)),
+                   istreambuf_iterator<char>());
+
+        Document doc;
+        doc.set_data(CHAR(STRING_ELT(filename, i)));
+
+        indexer.set_document(doc);
+        indexer.index_text(buf.c_str());
+
+        // Add the document to the database.
+        db.add_document(doc);
+    }
+
+    db.commit();
+
+    return R_NilValue;
 }
