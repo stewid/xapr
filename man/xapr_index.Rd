@@ -3,12 +3,12 @@
 \alias{xapr_index}
 \title{Index a Xapian database}
 \usage{
-xapr_index(path, doc, content, language = c("english", "en", "none", "danish",
-  "da", "dutch", "nl", "english_lovins", "lovins", "english_porter", "porter",
-  "finnish", "fi", "french", "fr", "german", "de", "german2", "hungarian", "hu",
-  "italian", "it", "kraaij_pohlmann", "norwegian", "nb", "nn", "no",
-  "portuguese", "pt", "romanian", "ro", "russian", "ru", "spanish", "es",
-  "swedish", "sv", "turkish", "tr"))
+xapr_index(path, doc, content, id = NULL, language = c("english", "en",
+  "none", "danish", "da", "dutch", "nl", "english_lovins", "lovins",
+  "english_porter", "porter", "finnish", "fi", "french", "fr", "german", "de",
+  "german2", "hungarian", "hu", "italian", "it", "kraaij_pohlmann", "norwegian",
+  "nb", "nn", "no", "portuguese", "pt", "romanian", "ro", "russian", "ru",
+  "spanish", "es", "swedish", "sv", "turkish", "tr"))
 }
 \arguments{
 \item{path}{A character vector specifying the path to a Xapian
@@ -20,6 +20,8 @@ database there.}
 \item{doc}{A character vector with data stored in the document.}
 
 \item{content}{A character vector with text to index.}
+
+\item{id}{Optional identifier of the document.}
 
 \item{language}{Either the English name for the language or the
 two letter ISO639 code. Default is 'english'}

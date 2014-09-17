@@ -24,6 +24,7 @@
 ##' database there.
 ##' @param doc A character vector with data stored in the document.
 ##' @param content A character vector with text to index.
+##' @param id Optional identifier of the document.
 ##' @param language Either the English name for the language or the
 ##' two letter ISO639 code. Default is 'english'
 ##' @return NULL
@@ -31,6 +32,7 @@
 xapr_index <- function(path,
                        doc,
                        content,
+                       id = NULL,
                        language = c(
                            "english", "en",
                            "none",
@@ -59,6 +61,7 @@ xapr_index <- function(path,
         path,
         doc,
         content,
+        id,
         language,
         package = "xapr")
 }
