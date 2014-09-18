@@ -18,6 +18,6 @@ Biarch: true
 NeedsCompilation: yes
 Date: 2014-09-12
 Collate:
+    'index.r'
+    'search.r'
     'xapr.r'
-    'xapr_index.r'
-    'xapr_search.r'
