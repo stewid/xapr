@@ -3,7 +3,7 @@
 \alias{xapr_search}
 \title{Search a Xapian database}
 \usage{
-xapr_search(path, terms, offset = 0, pagesize = 10)
+xapr_search(path, terms, offset = 0, pagesize = 10, wildcard = FALSE)
 }
 \arguments{
 \item{path}{A character vector specifying the path to one or more
@@ -14,6 +14,11 @@ Xapian databases.}
 \item{offset}{Starting point within result set. Default 0.}
 
 \item{pagesize}{Number of records to retrieve. Default 10.}
+
+\item{wildcard}{Support searches using a trailing '*' wildcard,
+which matches any number of trailing characters, so wildc* would
+match wildcard, wildcarded, wildcards, wildcat, wildcats,
+etc. Default is FALSE.}
 }
 \value{
 list with search result

@@ -68,10 +68,16 @@ void xapr_error(const char *format, const char *func_name, const char *arg)
  * @param terms Search terms
  * @param offset Starting point within result set
  * @param pagesize Number of records to retrieve
+ * @param wildcard Support trailing wildcard searches.
  * @return list with search result
  */
 extern "C" SEXP
-xapr_search(SEXP path, SEXP terms, SEXP offset, SEXP pagesize)
+xapr_search(
+    SEXP path,
+    SEXP terms,
+    SEXP offset,
+    SEXP pagesize,
+    SEXP wildcard)
 {
     SEXP result = R_NilValue;
     vector<string> queryterms;
@@ -86,12 +92,13 @@ xapr_search(SEXP path, SEXP terms, SEXP offset, SEXP pagesize)
     for (size_t i = 0; i < n; ++i)
         databases.add_database(Database(CHAR(STRING_ELT(path, i))));
 
-    n = length(terms);
-    for (size_t i = 0; i < n; ++i)
-        queryterms.push_back(CHAR(STRING_ELT(terms, i)));
-
     Enquire enquire(databases);
-    Query query(Query::OP_OR, queryterms.begin(), queryterms.end());
+    QueryParser qp = QueryParser();
+    qp.set_database(databases);
+    unsigned flags = QueryParser::FLAG_DEFAULT;
+    if (LOGICAL(wildcard)[0])
+        flags |= QueryParser::FLAG_WILDCARD;
+    Query query = qp.parse_query(CHAR(STRING_ELT(terms, 0)), flags);
     enquire.set_query(query);
 
     size_t _offset = INTEGER(offset)[0];

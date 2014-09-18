@@ -22,26 +22,35 @@
 ##' @param terms Search terms
 ##' @param offset Starting point within result set. Default 0.
 ##' @param pagesize Number of records to retrieve. Default 10.
+##' @param wildcard Support searches using a trailing '*' wildcard,
+##' which matches any number of trailing characters, so wildc* would
+##' match wildcard, wildcarded, wildcards, wildcat, wildcats,
+##' etc. Default is FALSE.
 ##' @return list with search result
 ##' @export
-xapr_search <- function(path, terms, offset = 0, pagesize = 10)
+xapr_search <- function(path,
+                        terms,
+                        offset   = 0,
+                        pagesize = 10,
+                        wildcard = FALSE)
 {
-    terms <- deparse(substitute(terms))
     .Call(
         "xapr_search",
         path,
         terms,
         as.integer(offset),
         as.integer(pagesize),
+        wildcard,
         package = "xapr")
 }
 
 ##' @export
 print.xapian_match <- function(x)
 {
-    cat(sprintf("%i: #%3.3i\n",
+    cat(sprintf("%i: #%3.3i %s\n",
                 x$rank + 1,
-                x$docid))
+                x$docid,
+                x$data))
 }
 
 ##' @export
