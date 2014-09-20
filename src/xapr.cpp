@@ -170,7 +170,9 @@ xapr_index(SEXP path, SEXP doc, SEXP content, SEXP id, SEXP language)
         document.set_data(CHAR(STRING_ELT(doc, i)));
 
         indexer.set_document(document);
-        indexer.index_text(CHAR(STRING_ELT(content, i)));
+
+        if (NA_STRING != STRING_ELT(content, i))
+            indexer.index_text(CHAR(STRING_ELT(content, i)));
 
         if (R_NilValue == id) {
             // Add the document to the database.
