@@ -23,19 +23,26 @@
 ##' in the specified directory, Xapian will try to create a new empty
 ##' database there.
 ##' @param doc A character vector with data stored in the document.
+##' @param terms A \code{data.frame} with text to index with a
+##' prefix. The prefix is a short string at the beginning of the term
+##' to indicate which field the term indexes. See
+##' \url{http://xapian.org/docs/omega/termprefixes} for a list of
+##' conventional prefixes. The prefixes are the names of the
+##' variables.
 ##' @param content A character vector with text to index.
 ##' @param id Optional identifier of the document.
 ##' @param language Either the English name for the language or the
-##' two letter ISO639 code. Default is 'english'
+##' two letter ISO639 code. Default is 'none'
 ##' @return NULL
 ##' @export
 xapr_index <- function(path,
                        doc,
+                       terms,
                        content,
                        id = NULL,
                        language = c(
-                           "english", "en",
                            "none",
+                           "english", "en",
                            "danish", "da",
                            "dutch", "nl",
                            "english_lovins", "lovins",
@@ -55,13 +62,35 @@ xapr_index <- function(path,
                            "turkish", "tr"))
 {
     language <- match.arg(language)
+    if (identical(language, "none"))
+        language <- NULL
+
+    if (missing(terms))
+        terms <- NULL
+    if (!is.null(terms)) {
+        if (!is.data.frame(terms))
+            stop("'terms' must be a data.frame")
+        colnames(terms) <- toupper(colnames(terms))
+        for (i in seq_len(ncol(terms))) {
+            if (is.factor(terms[,i]))
+                terms[,i] <- as.character(terms[,i])
+            if (!is.character(terms[,i])) {
+                stop(paste0("'terms$",
+                            colnames(terms)[i],
+                            "' must be a character"))
+            }
+        }
+    }
 
     .Call(
         "xapr_index",
         path,
         doc,
+        terms,
         content,
         id,
         language,
         package = "xapr")
+
+    invisible(NULL)
 }

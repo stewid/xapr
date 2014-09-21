@@ -3,8 +3,8 @@
 \alias{xapr_index}
 \title{Index a Xapian database}
 \usage{
-xapr_index(path, doc, content, id = NULL, language = c("english", "en",
-  "none", "danish", "da", "dutch", "nl", "english_lovins", "lovins",
+xapr_index(path, doc, terms, content, id = NULL, language = c("none",
+  "english", "en", "danish", "da", "dutch", "nl", "english_lovins", "lovins",
   "english_porter", "porter", "finnish", "fi", "french", "fr", "german", "de",
   "german2", "hungarian", "hu", "italian", "it", "kraaij_pohlmann", "norwegian",
   "nb", "nn", "no", "portuguese", "pt", "romanian", "ro", "russian", "ru",
@@ -19,12 +19,19 @@ database there.}
 
 \item{doc}{A character vector with data stored in the document.}
 
+\item{terms}{A \code{data.frame} with text to index with a
+prefix. The prefix is a short string at the beginning of the term
+to indicate which field the term indexes. See
+\url{http://xapian.org/docs/omega/termprefixes} for a list of
+conventional prefixes. The prefixes are the names of the
+variables.}
+
 \item{content}{A character vector with text to index.}
 
 \item{id}{Optional identifier of the document.}
 
 \item{language}{Either the English name for the language or the
-two letter ISO639 code. Default is 'english'}
+two letter ISO639 code. Default is 'none'}
 }
 \description{
 Index a Xapian database

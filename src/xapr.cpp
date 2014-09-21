@@ -148,6 +148,11 @@ xapr_search(
  *
  * @param path A character vector specifying the path to a Xapian databases.
  * @param doc A character vector with data stored in the document.
+ * @param terms A \code{data.frame} with text to index with a
+ * prefix. The prefix is a short string at the beginning of the term
+ * to indicate which field the term indexes. See
+ * \url{http://xapian.org/docs/omega/termprefixes} for a list of
+ * conventional prefixes. The prefixes are the names of the variables.
  * @param content A character vector with text to index.
  * @param id Optional identifier of the document.
  * @param language Either the English name for the language or the two
@@ -155,14 +160,26 @@ xapr_search(
  * @return R_NilValue
  */
 extern "C" SEXP
-xapr_index(SEXP path, SEXP doc, SEXP content, SEXP id, SEXP language)
+xapr_index(
+    SEXP path,
+    SEXP doc,
+    SEXP terms,
+    SEXP content,
+    SEXP id,
+    SEXP language)
 {
+    if (R_NilValue != language)
+        Rf_error("Stemmer not implemented. Sorry\n");
+
     // Open the database for update, creating a new database if necessary.
     WritableDatabase db(CHAR(STRING_ELT(path, 0)), DB_CREATE_OR_OPEN);
 
     TermGenerator indexer;
-    Stem stemmer(CHAR(STRING_ELT(language, 0)));
-    indexer.set_stemmer(stemmer);
+
+    // Check if there are any terms
+    size_t columns = 0;
+    if (R_NilValue != terms)
+        columns = Rf_length(terms);
 
     size_t n = length(content);
     for (size_t i = 0; i < n; ++i) {
@@ -170,6 +187,18 @@ xapr_index(SEXP path, SEXP doc, SEXP content, SEXP id, SEXP language)
         document.set_data(CHAR(STRING_ELT(doc, i)));
 
         indexer.set_document(document);
+
+        // Iterate of columns and index non NA terms with column name
+        // as prefix.
+        for (size_t j = 0; j < columns; ++j) {
+            SEXP value = STRING_ELT(VECTOR_ELT(terms, j), i);
+            if (NA_STRING != value) {
+                string prefix =
+                    CHAR(STRING_ELT(getAttrib(terms, R_NamesSymbol), j));
+
+                indexer.index_text(CHAR(value), 1, prefix);
+            }
+        }
 
         if (NA_STRING != STRING_ELT(content, i))
             indexer.index_text(CHAR(STRING_ELT(content, i)));
