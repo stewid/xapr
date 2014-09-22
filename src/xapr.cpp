@@ -65,7 +65,9 @@ void xapr_error(const char *format, const char *func_name, const char *arg)
  *
  * @param path A character vector specifying the path to one or more
  * Xapian databases.
- * @param terms Search terms
+ * @param query_string A free-text query
+ * @param prefix A data.frame with term prefixes. First column field
+ * and second column prefix.
  * @param offset Starting point within result set
  * @param pagesize Number of records to retrieve
  * @param wildcard Support trailing wildcard searches.
@@ -74,13 +76,13 @@ void xapr_error(const char *format, const char *func_name, const char *arg)
 extern "C" SEXP
 xapr_search(
     SEXP path,
-    SEXP terms,
+    SEXP query_string,
+    SEXP prefix,
     SEXP offset,
     SEXP pagesize,
     SEXP wildcard)
 {
     SEXP result = R_NilValue;
-    vector<string> queryterms;
     Database databases;
 
     if (!xapr_arg_check_integer(offset))
@@ -98,15 +100,28 @@ xapr_search(
     unsigned flags = QueryParser::FLAG_DEFAULT;
     if (LOGICAL(wildcard)[0])
         flags |= QueryParser::FLAG_WILDCARD;
-    Query query = qp.parse_query(CHAR(STRING_ELT(terms, 0)), flags);
+
+    // Check if there are any prefix
+    size_t n_prefix = 0;
+    if (R_NilValue != prefix)
+        n_prefix = Rf_length(getAttrib(prefix, R_RowNamesSymbol));
+    for (size_t i = 0; i < n_prefix; ++i) {
+        SEXP field_item = STRING_ELT(VECTOR_ELT(prefix, 0), i);
+        if (NA_STRING != field_item) {
+            SEXP prefix_item = STRING_ELT(VECTOR_ELT(prefix, 1), i);
+            if (NA_STRING != prefix_item)
+                qp.add_prefix(CHAR(field_item), CHAR(prefix_item));
+        }
+    }
+
+    Query query = qp.parse_query(CHAR(STRING_ELT(query_string, 0)), flags);
     enquire.set_query(query);
 
     size_t _offset = INTEGER(offset)[0];
     size_t _pagesize = INTEGER(pagesize)[0];
     MSet matches = enquire.get_mset(_offset, _pagesize);
-    MSetIterator i;
     PROTECT(result = allocVector(VECSXP, matches.size()));
-    for (i = matches.begin(); i != matches.end(); ++i) {
+    for (MSetIterator i = matches.begin(); i != matches.end(); ++i) {
         const size_t n_items = 4;
         SEXP item, names;
         size_t j = 0;

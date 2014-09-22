@@ -19,7 +19,10 @@
 ##'
 ##' @param path A character vector specifying the path to one or more
 ##' Xapian databases.
-##' @param terms Search terms
+##' @param query A free-text query
+##' @param prefix A data.frame with term prefixes. First column field
+##' and second column prefix, e.g. \code{data.frame(field="author",
+##' prefix="A")}. Default NULL.
 ##' @param offset Starting point within result set. Default 0.
 ##' @param pagesize Number of records to retrieve. Default 10.
 ##' @param wildcard Support searches using a trailing '*' wildcard,
@@ -29,15 +32,30 @@
 ##' @return list with search result
 ##' @export
 xapr_search <- function(path,
-                        terms,
+                        query,
+                        prefix = NULL,
                         offset   = 0,
                         pagesize = 10,
                         wildcard = FALSE)
 {
+    if (!is.null(prefix)) {
+        if (!is.data.frame(prefix))
+            stop("'prefix' must be a data.frame")
+        if (is.factor(prefix$field))
+            prefix$field <- as.character(prefix$field)
+        if (!is.character(prefix$field))
+            stop(paste0("'prefix$$field' must be a character"))
+        if (is.factor(prefix$prefix))
+            prefix$prefix <- as.character(prefix$prefix)
+        if (!is.character(prefix$prefix))
+            stop(paste0("'prefix$$prefix' must be a character"))
+    }
+
     .Call(
         "xapr_search",
         path,
-        terms,
+        query,
+        prefix,
         as.integer(offset),
         as.integer(pagesize),
         wildcard,

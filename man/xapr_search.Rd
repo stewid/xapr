@@ -3,13 +3,18 @@
 \alias{xapr_search}
 \title{Search a Xapian database}
 \usage{
-xapr_search(path, terms, offset = 0, pagesize = 10, wildcard = FALSE)
+xapr_search(path, query, prefix = NULL, offset = 0, pagesize = 10,
+  wildcard = FALSE)
 }
 \arguments{
 \item{path}{A character vector specifying the path to one or more
 Xapian databases.}
 
-\item{terms}{Search terms}
+\item{query}{A free-text query}
+
+\item{prefix}{A data.frame with term prefixes. First column field
+and second column prefix, e.g. \code{data.frame(field="author",
+prefix="A")}. Default NULL.}
 
 \item{offset}{Starting point within result set. Default 0.}
 
