@@ -63,7 +63,7 @@ xapr_search <- function(path,
 }
 
 ##' @export
-print.xapian_match <- function(x)
+print.xapian_match <- function(x, ...)
 {
     cat(sprintf("%i: #%3.3i %s\n",
                 x$rank + 1,
@@ -72,7 +72,7 @@ print.xapian_match <- function(x)
 }
 
 ##' @export
-print.xapian_search <- function(x)
+print.xapian_search <- function(x, ...)
 {
     lapply(x, print)
 }
