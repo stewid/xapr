@@ -19,9 +19,70 @@
 ##'
 ##' Extract the index plan from a formula specification.
 ##' @param formula The index plan formula.
-##' @return list with column names for data, text and prefixes.
+##' @param colnames The column names of the \code{data.frame} to
+##' index.
+##' @return list with column names for data, text, prefixes and
+##' identifiers.
 ##' @keywords internal
-index_plan <- function(formula) {
+index_plan <- function(formula, colnames) {
+    ## Help function to extract the data column
+    data_column <- function(data, colnames) {
+        data <- match(data, colnames)
+        if (!identical(length(data), 1L))
+            stop("Invalid index formula")
+        data
+    }
+
+    ## Help function to extract identifier column
+    id_column <- function(id, colnames) {
+        ## Find Q (unique id)
+        id <- grep("^Q:", id, value = TRUE)
+
+        if (length(id)) {
+            id <- match(sapply(strsplit(id, ":"), "[", 2),
+                                colnames)
+            if (!identical(length(id), 1L))
+                stop("Invalid index formula")
+        } else {
+            id <- NULL
+        }
+
+        id
+    }
+
+    ## Help function to extract prefix columns
+    prefix_columns <- function(prefix, colnames) {
+        ## Drop Q (unique identifier)
+        prefix <- grep("^Q:", prefix, value = TRUE, invert = TRUE)
+
+        ## Extract prefix label and column index
+        prefix_lbl <- sapply(strsplit(prefix, ":"), "[", 1)
+        prefix_col <- match(sapply(strsplit(prefix, ":"), "[", 2),
+                            colnames)
+
+        ## Check that all column names are mapped
+        if (any(sapply(prefix_col, is.null)))
+            stop("Invalid index formula")
+
+        ## If 'X' append uppercase column name
+        i <- prefix_lbl ==  "X"
+        if (any(i)) {
+            prefix_lbl[i] <- paste0(prefix_lbl[i],
+                                    toupper(colnames[prefix_col[i]]))
+        }
+
+        list(prefix_lbl = prefix_lbl,
+             prefix_col = prefix_col)
+    }
+
+    ## Help function to extract text columns
+    text_columns <- function(text, colnames) {
+        text <- match(text, colnames)
+        if (any(sapply(text, is.null)))
+            stop("Invalid index formula")
+        text
+    }
+
     term_prefixes <- c("A" ,"D", "E", "G", "H", "I", "K", "L", "M",
                        "N", "O", "P", "Q", "R", "S", "T", "U", "V",
                        "X", "Y", "Z")
@@ -40,9 +101,9 @@ index_plan <- function(formula) {
     text <- text[!(text %in% term_prefixes)]
 
     ## Extract columns to prefix
-    prefixes <- attr(terms(formula), "term.labels")
-    prefixes <- prefixes[attr(terms(formula), "order") == 2]
-    prefixes <- sapply(prefixes,
+    prefix <- attr(terms(formula), "term.labels")
+    prefix <- prefix[attr(terms(formula), "order") == 2]
+    prefix <- sapply(prefix,
                        function(prefix) {
                            ## Make sure the first term is the prefix
                            prefix <- unlist(strsplit(prefix, ":"))
@@ -52,11 +113,12 @@ index_plan <- function(formula) {
                                return(paste0(rev(prefix), collapse=":"))
                            stop("Invalid index formula")
                        })
-    names(prefixes) <- NULL
+    names(prefix) <- NULL
 
-    list(data     = data,
-         text     = text,
-         prefixes = prefixes)
+    list(data   = data_column(data, colnames),
+         text   = text_columns(text, colnames),
+         prefix = prefix_columns(prefix, colnames),
+         id     = id_column(prefix, colnames))
 }
 
 ##' Index
@@ -146,8 +208,9 @@ xindex <- function(formula,
     if (identical(language, "none"))
         language <- NULL
 
-    ip <- index_plan(formula)
+    ip <- index_plan(formula, colnames(data))
 
+    stop("The implementation is not completed. Sorry")
     ## .Call("xapr_index", data, path, language, package = "xapr")
 
     invisible(NULL)
