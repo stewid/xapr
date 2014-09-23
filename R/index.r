@@ -110,29 +110,29 @@ index_plan <- function(formula) {
 ##' dir.create(path)
 ##' xindex(data ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
 ##' }
-xapr_index <- function(formula,
-                       data,
-                       path,
-                       language = c(
-                           "none",
-                           "english", "en",
-                           "danish", "da",
-                           "dutch", "nl",
-                           "english_lovins", "lovins",
-                           "english_porter", "porter",
-                           "finnish", "fi",
-                           "french", "fr",
-                           "german", "de", "german2",
-                           "hungarian", "hu",
-                           "italian", "it",
-                           "kraaij_pohlmann",
-                           "norwegian", "nb", "nn", "no",
-                           "portuguese", "pt",
-                           "romanian", "ro",
-                           "russian", "ru",
-                           "spanish", "es",
-                           "swedish", "sv",
-                           "turkish", "tr"))
+xindex <- function(formula,
+                   data,
+                   path,
+                   language = c(
+                       "none",
+                       "english", "en",
+                       "danish", "da",
+                       "dutch", "nl",
+                       "english_lovins", "lovins",
+                       "english_porter", "porter",
+                       "finnish", "fi",
+                       "french", "fr",
+                       "german", "de", "german2",
+                       "hungarian", "hu",
+                       "italian", "it",
+                       "kraaij_pohlmann",
+                       "norwegian", "nb", "nn", "no",
+                       "portuguese", "pt",
+                       "romanian", "ro",
+                       "russian", "ru",
+                       "spanish", "es",
+                       "swedish", "sv",
+                       "turkish", "tr"))
 {
     ## Check arguments
     if (missing(formula))
