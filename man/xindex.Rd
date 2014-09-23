@@ -15,6 +15,8 @@ xindex(formula, data, path, language = c("none", "english", "en", "danish",
 plan for the columns in the data.frame. The details of the index
 plan specification are given under ‘Details’.}
 
+\item{data}{The \code{data.frame} to index.}
+
 \item{path}{A character vector specifying the path to a Xapian
 databases. If there is already a database in the specified
 directory, it will be opened. If there isn't an existing database
@@ -29,9 +31,9 @@ Index the content of a \code{data.frame} with the Xapian search
 engine.
 }
 \details{
-The index plan for ‘xindex’ are specified
-symbolically. An index plan has the form ‘data ~ terms’ where
-‘data’ is the blob of data returned from a request and ‘terms’ is
+The index plan for 'xindex' are specified
+symbolically. An index plan has the form 'data ~ terms' where
+'data' is the blob of data returned from a request and 'terms' is
 the basis for a search in Xapian. A first order term index the
 text in the column as free text. A specification of the form
 'first:second' indicates that the text in 'second' should be
@@ -40,8 +42,8 @@ beginning of the term to indicate which field the term
 indexes. Valid prefixes are: 'A' ,'D', 'E', 'G', 'H', 'I', 'K',
 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'X', 'Y'
 and 'Z'. See \url{http://xapian.org/docs/omega/termprefixes} for a
-list of conventional prefixes. The specification ‘first*second’ is
-the same as 'second + first:second’. The prefix 'X' will create a
+list of conventional prefixes. The specification 'first*second' is
+the same as 'second + first:second'. The prefix 'X' will create a
 user defined prefix by appending the uppercase 'second' to
 'X'. The prefix 'Q' will use data in the 'second' column as a
 unique identifier for the document. NA values in columns to be
