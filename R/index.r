@@ -65,7 +65,7 @@ index_plan <- function(formula) {
 ##' engine.
 ##' @param formula A formula with a symbolic description of the index
 ##' plan for the columns in the data.frame. The details of the index
-##' plan specification are given under ‘Details’.
+##' plan specification are given under 'Details'.
 ##' @param data The \code{data.frame} to index.
 ##' @param path A character vector specifying the path to a Xapian
 ##' databases. If there is already a database in the specified

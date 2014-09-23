@@ -13,7 +13,7 @@ xindex(formula, data, path, language = c("none", "english", "en", "danish",
 \arguments{
 \item{formula}{A formula with a symbolic description of the index
 plan for the columns in the data.frame. The details of the index
-plan specification are given under ‘Details’.}
+plan specification are given under 'Details'.}
 
 \item{data}{The \code{data.frame} to index.}
 
