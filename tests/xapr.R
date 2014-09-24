@@ -19,11 +19,12 @@ library(xapr)
 
 path <- tempfile(pattern="xapr-")
 
-xapr_index(
-    path    = path,
-    doc     = "This is a test",
-    terms   = data.frame(A="Stefan Widgren"),
-    content = "Hello world")
+df <- data.frame(data    = "This is a test",
+                 author  = "Stefan Widgren",
+                 content = "Hello world",
+                 stringsAsFactors = FALSE)
+
+xindex(data ~ A:author + content, df, path)
 
 ## Expect empty list.
 stopifnot(identical(xapr_search(path, "Widgren"),
