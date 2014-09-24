@@ -161,14 +161,20 @@ xapr_search(
 /**
  * Index a Xapian database
  *
+ * Index specified content of a data.frame with the Xapian search engine.
  * @param path A character vector specifying the path to a Xapian databases.
- * @param doc A character vector with data stored in the document.
- * @param terms A \code{data.frame} with text to index with a
- * prefix. The prefix is a short string at the beginning of the term
- * to indicate which field the term indexes. See
- * \url{http://xapian.org/docs/omega/termprefixes} for a list of
- * conventional prefixes. The prefixes are the names of the variables.
- * @param content A character vector with text to index.
+ * @param df The \code{data.frame} to index.
+ * @param nrow Number of rows in the data.frame to index.
+ * @param data The column in 'df' with content to add to the
+ * document. Note: 1 based column index.
+ * @param text The column(s) in 'df' with content to index. Note: 1
+ * based column index.
+ * @param prefix_lbl A character vector with the prefix to use for
+ * content in prefix_col.
+ * @param prefix_col The column(s) in 'df' with content to index with
+ * the prefix_lbl. Note: 1 based column index.
+ * @param prefix_wdf The The wdf increment to use for the content in
+ * prefix_col.
  * @param id Optional identifier of the document.
  * @param language Either the English name for the language or the two
  * letter ISO639 code.
@@ -177,9 +183,13 @@ xapr_search(
 extern "C" SEXP
 xapr_index(
     SEXP path,
-    SEXP doc,
-    SEXP terms,
-    SEXP content,
+    SEXP df,
+    SEXP nrow,
+    SEXP data,
+    SEXP text,
+    SEXP prefix_lbl,
+    SEXP prefix_col,
+    SEXP prefix_wdf,
     SEXP id,
     SEXP language)
 {
@@ -190,40 +200,39 @@ xapr_index(
     WritableDatabase db(CHAR(STRING_ELT(path, 0)), DB_CREATE_OR_OPEN);
 
     TermGenerator indexer;
-
-    // Check if there are any terms
-    size_t columns = 0;
-    if (R_NilValue != terms)
-        columns = Rf_length(terms);
-
-    size_t n = length(content);
-    for (size_t i = 0; i < n; ++i) {
+    for (size_t row = 0, n_row = INTEGER(nrow)[0]; row < n_row; ++row) {
         Document document;
-        document.set_data(CHAR(STRING_ELT(doc, i)));
 
+        if (R_NilValue != data)
+            document.set_data(CHAR(STRING_ELT(VECTOR_ELT(df, INTEGER(data)[0] - 1), row)));
         indexer.set_document(document);
 
-        // Iterate of columns and index non NA terms with column name
-        // as prefix.
-        for (size_t j = 0; j < columns; ++j) {
-            SEXP value = STRING_ELT(VECTOR_ELT(terms, j), i);
+        // Iterate over prefix columns and index non NA values with
+        // prefix label as prefix.
+        for (size_t i = 0, n_prefix = Rf_length(prefix_lbl); i < n_prefix; ++i) {
+            SEXP value = STRING_ELT(VECTOR_ELT(df, INTEGER(prefix_col)[i] - 1), row);
             if (NA_STRING != value) {
-                string prefix =
-                    CHAR(STRING_ELT(getAttrib(terms, R_NamesSymbol), j));
-
-                indexer.index_text(CHAR(value), 1, prefix);
+                indexer.index_text(
+                    CHAR(value),
+                    INTEGER(prefix_wdf)[i],
+                    CHAR(STRING_ELT(prefix_lbl, i)));
             }
         }
 
-        if (NA_STRING != STRING_ELT(content, i))
-            indexer.index_text(CHAR(STRING_ELT(content, i)));
+        for (size_t i = 0, n_text = Rf_length(text); i < n_text; ++i) {
+            SEXP value = STRING_ELT(VECTOR_ELT(df, INTEGER(text)[i] - 1), row);
+            if (NA_STRING != value) {
+                indexer.index_text(CHAR(value));
+                indexer.increase_termpos();
+            }
+        }
 
         if (R_NilValue == id) {
-            // Add the document to the database.
             db.add_document(document);
         } else {
-            document.add_boolean_term(CHAR(STRING_ELT(id, i)));
-            db.replace_document(CHAR(STRING_ELT(id, i)), document);
+            SEXP value = STRING_ELT(VECTOR_ELT(df, INTEGER(id)[0] - 1), row);
+            document.add_boolean_term(CHAR(value));
+            db.replace_document(CHAR(value), document);
         }
     }
 
