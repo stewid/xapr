@@ -71,8 +71,9 @@ index_plan <- function(formula, colnames) {
                                     toupper(colnames[prefix_col[i]]))
         }
 
-        list(prefix_lbl = prefix_lbl,
-             prefix_col = prefix_col)
+        list(lbl = prefix_lbl,
+             col = prefix_col,
+             wdf = rep(1L, length(prefix_lbl)))
     }
 
     ## Help function to extract text columns
