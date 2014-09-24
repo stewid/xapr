@@ -27,9 +27,13 @@
 index_plan <- function(formula, colnames) {
     ## Help function to extract the data column
     data_column <- function(data, colnames) {
-        data <- match(data, colnames)
-        if (!identical(length(data), 1L))
-            stop("Invalid index formula")
+        if (!is.null(data)) {
+            data <- match(data, colnames)
+            if (!identical(length(data), 1L))
+                stop("Invalid index formula")
+            if (is.na(data[1]))
+                stop("Invalid index formula")
+        }
         data
     }
 
@@ -55,20 +59,26 @@ index_plan <- function(formula, colnames) {
         ## Drop Q (unique identifier)
         prefix <- grep("^Q:", prefix, value = TRUE, invert = TRUE)
 
-        ## Extract prefix label and column index
-        prefix_lbl <- sapply(strsplit(prefix, ":"), "[", 1)
-        prefix_col <- match(sapply(strsplit(prefix, ":"), "[", 2),
-                            colnames)
+        if (length(prefix)) {
+            ## Extract prefix label and column index
+            prefix_lbl <- sapply(strsplit(prefix, ":"), "[", 1)
+            prefix_col <- match(sapply(strsplit(prefix, ":"), "[", 2),
+                                colnames)
 
-        ## Check that all column names are mapped
-        if (any(sapply(prefix_col, is.null)))
-            stop("Invalid index formula")
+            ## Check that all column names are mapped
+            if (any(sapply(prefix_col, is.null)))
+                stop("Invalid index formula")
 
-        ## If 'X' append uppercase column name
-        i <- prefix_lbl ==  "X"
-        if (any(i)) {
-            prefix_lbl[i] <- paste0(prefix_lbl[i],
-                                    toupper(colnames[prefix_col[i]]))
+            ## If 'X' append uppercase column name
+            i <- prefix_lbl ==  "X"
+            if (any(i)) {
+                prefix_lbl[i] <- paste0(prefix_lbl[i],
+                                        toupper(colnames[prefix_col[i]]))
+            }
+        } else {
+            prefix_lbl <- character(0)
+            prefix_col <- integer(0)
+            prefix_wdf <- integer(0)
         }
 
         list(lbl = prefix_lbl,
@@ -78,10 +88,16 @@ index_plan <- function(formula, colnames) {
 
     ## Help function to extract text columns
     text_columns <- function(text, colnames) {
-        text <- match(text, colnames)
-        if (any(sapply(text, is.null)))
+        text <- unlist(lapply(text, function(col) {
+            if (identical(col, "."))
+                col <- colnames
+            col
+        }))
+
+        text <- match(unique(text), colnames)
+        if (any(sapply(text, is.na)))
             stop("Invalid index formula")
-        text
+        sort(text)
     }
 
     term_prefixes <- c("A" ,"D", "E", "G", "H", "I", "K", "L", "M",
@@ -89,21 +105,23 @@ index_plan <- function(formula, colnames) {
                        "X", "Y", "Z")
 
     ## Extract response variable
-    response <- attr(terms(formula), "response")
-    if (!response)
-        stop("Invalid index formula")
-    vars <- attr(terms(formula), "variables")[-1]
-    data <- as.character(vars[response])
+    response <- attr(terms(formula, allowDotAsName = TRUE), "response")
+    if (response) {
+        vars <- attr(terms(formula, allowDotAsName = TRUE), "variables")[-1]
+        data <- as.character(vars[response])
+    } else {
+        data <- NULL
+    }
 
     ## Extract columns for free text indexing. Drop columns with a
     ## name equal to a term_prefix.
-    text <- attr(terms(formula), "term.labels")
-    text <- text[attr(terms(formula), "order") == 1]
+    text <- attr(terms(formula, allowDotAsName = TRUE), "term.labels")
+    text <- text[attr(terms(formula, allowDotAsName = TRUE), "order") == 1]
     text <- text[!(text %in% term_prefixes)]
 
     ## Extract columns to prefix
-    prefix <- attr(terms(formula), "term.labels")
-    prefix <- prefix[attr(terms(formula), "order") == 2]
+    prefix <- attr(terms(formula, allowDotAsName = TRUE), "term.labels")
+    prefix <- prefix[attr(terms(formula, allowDotAsName = TRUE), "order") == 2]
     prefix <- sapply(prefix,
                        function(prefix) {
                            ## Make sure the first term is the prefix
