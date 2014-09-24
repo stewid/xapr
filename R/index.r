@@ -144,17 +144,20 @@ index_plan <- function(formula, colnames) {
 ##' the basis for a search in Xapian. A first order term index the
 ##' text in the column as free text. A specification of the form
 ##' 'first:second' indicates that the text in 'second' should be
-##' indexed with prefix 'first'. The prefix is a short string at the
-##' beginning of the term to indicate which field the term
-##' indexes. Valid prefixes are: 'A' ,'D', 'E', 'G', 'H', 'I', 'K',
-##' 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'X', 'Y'
-##' and 'Z'. See \url{http://xapian.org/docs/omega/termprefixes} for a
-##' list of conventional prefixes. The specification 'first*second' is
-##' the same as 'second + first:second'. The prefix 'X' will create a
-##' user defined prefix by appending the uppercase 'second' to
-##' 'X'. The prefix 'Q' will use data in the 'second' column as a
-##' unique identifier for the document. NA values in columns to be
-##' indexed are skipped.
+##' indexed with prefix 'first'.
+##'
+##' The prefix is a short string at the beginning of the term to
+##' indicate which field the term indexes. Valid prefixes are: 'A'
+##' ,'D', 'E', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+##' 'S', 'T', 'U', 'V', 'X', 'Y' and 'Z'. See
+##' \url{http://xapian.org/docs/omega/termprefixes} for a list of
+##' conventional prefixes.
+##'
+##' The specification 'first*second' is the same as 'second +
+##' first:second'. The prefix 'X' will create a user defined prefix by
+##' appending the uppercase 'second' to 'X'. The prefix 'Q' will use
+##' data in the 'second' column as a unique identifier for the
+##' document. NA values in columns to be indexed are skipped.
 ##' @export
 ##' @examples
 ##' \dontrun{
@@ -211,8 +214,18 @@ xindex <- function(formula,
 
     ip <- index_plan(formula, colnames(data))
 
-    stop("The implementation is not completed. Sorry")
-    ## .Call("xapr_index", data, path, language, package = "xapr")
+    .Call("xapr_index",
+          path,
+          data,
+          nrow(data),
+          ip$data,
+          ip$text,
+          ip$prefix$lbl,
+          ip$prefix$col,
+          ip$prefix$wdf,
+          ip$id,
+          language,
+          package = "xapr")
 
     invisible(NULL)
 }
