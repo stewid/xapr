@@ -37,17 +37,20 @@ symbolically. An index plan has the form 'data ~ terms' where
 the basis for a search in Xapian. A first order term index the
 text in the column as free text. A specification of the form
 'first:second' indicates that the text in 'second' should be
-indexed with prefix 'first'. The prefix is a short string at the
-beginning of the term to indicate which field the term
-indexes. Valid prefixes are: 'A' ,'D', 'E', 'G', 'H', 'I', 'K',
-'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'X', 'Y'
-and 'Z'. See \url{http://xapian.org/docs/omega/termprefixes} for a
-list of conventional prefixes. The specification 'first*second' is
-the same as 'second + first:second'. The prefix 'X' will create a
-user defined prefix by appending the uppercase 'second' to
-'X'. The prefix 'Q' will use data in the 'second' column as a
-unique identifier for the document. NA values in columns to be
-indexed are skipped.
+indexed with prefix 'first'.
+
+The prefix is a short string at the beginning of the term to
+indicate which field the term indexes. Valid prefixes are: 'A'
+,'D', 'E', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+'S', 'T', 'U', 'V', 'X', 'Y' and 'Z'. See
+\url{http://xapian.org/docs/omega/termprefixes} for a list of
+conventional prefixes.
+
+The specification 'first*second' is the same as 'second +
+first:second'. The prefix 'X' will create a user defined prefix by
+appending the uppercase 'second' to 'X'. The prefix 'Q' will use
+data in the 'second' column as a unique identifier for the
+document. NA values in columns to be indexed are skipped.
 }
 \examples{
 \dontrun{
