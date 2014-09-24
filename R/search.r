@@ -29,14 +29,14 @@
 ##' which matches any number of trailing characters, so wildc* would
 ##' match wildcard, wildcarded, wildcards, wildcat, wildcats,
 ##' etc. Default is FALSE.
-##' @return list with search result
+##' @return \code{xapian_search} object with result
 ##' @export
-xapr_search <- function(path,
-                        query,
-                        prefix = NULL,
-                        offset   = 0,
-                        pagesize = 10,
-                        wildcard = FALSE)
+xsearch <- function(path,
+                    query,
+                    prefix = NULL,
+                    offset   = 0,
+                    pagesize = 10,
+                    wildcard = FALSE)
 {
     if (!is.null(prefix)) {
         if (!is.data.frame(prefix))
