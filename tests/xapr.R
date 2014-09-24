@@ -27,7 +27,7 @@ df <- data.frame(data    = "This is a test",
 xindex(data ~ A:author + content, df, path)
 
 ## Expect empty list.
-stopifnot(identical(xapr_search(path, "Widgren"),
+stopifnot(identical(xsearch(path, "Widgren"),
                     structure(list(), class = "xapian_search")))
 
 ## Expect one hit.
@@ -39,11 +39,11 @@ search_2 <- structure(list(
 
 prefix <- data.frame(field = "author", prefix = "A")
 
-stopifnot(identical(xapr_search(path, "author:Widgren", prefix),
+stopifnot(identical(xsearch(path, "author:Widgren", prefix),
                     search_2))
 
 ## Expect empty list without prefix
-stopifnot(identical(xapr_search(path, "author:Widgren"),
+stopifnot(identical(xsearch(path, "author:Widgren"),
                     structure(list(), class = "xapian_search")))
 
 ## Cleanup
