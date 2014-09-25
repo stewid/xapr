@@ -51,6 +51,14 @@ first:second'. The prefix 'X' will create a user defined prefix by
 appending the uppercase 'second' to 'X'. The prefix 'Q' will use
 data in the 'second' column as a unique identifier for the
 document. NA values in columns to be indexed are skipped.
+
+No response e.g. '~ second + first:second' writes the row number
+as data to the document.
+
+The specification '~X*.' creates prefix terms with all columns
+plus free text.
+
+The specification '~X:.' creates prefix terms with all columns
 }
 \examples{
 \dontrun{
