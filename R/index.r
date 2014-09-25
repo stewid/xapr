@@ -60,6 +60,14 @@ index_plan <- function(formula, colnames) {
         prefix <- grep("^Q:", prefix, value = TRUE, invert = TRUE)
 
         if (length(prefix)) {
+            ## Replace '.' with colnames
+            prefix <- as.character(sapply(prefix, function(x) {
+                x <- unlist(strsplit(x, ":"))
+                if (identical(x[2], "."))
+                    return(paste0(x[1], ":", colnames))
+                return(paste0(x[1], ":", x[2]))
+            }))
+
             ## Extract prefix label and column index
             prefix_lbl <- sapply(strsplit(prefix, ":"), "[", 1)
             prefix_col <- match(sapply(strsplit(prefix, ":"), "[", 2),
@@ -67,6 +75,8 @@ index_plan <- function(formula, colnames) {
 
             ## Check that all column names are mapped
             if (any(sapply(prefix_col, is.null)))
+                stop("Invalid index formula")
+            if (any(sapply(prefix_col, is.na)))
                 stop("Invalid index formula")
 
             ## If 'X' append uppercase column name
@@ -95,6 +105,8 @@ index_plan <- function(formula, colnames) {
         }))
 
         text <- match(unique(text), colnames)
+        if (any(sapply(text, is.null)))
+            stop("Invalid index formula")
         if (any(sapply(text, is.na)))
             stop("Invalid index formula")
         sort(text)
