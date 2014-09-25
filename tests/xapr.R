@@ -26,25 +26,20 @@ df <- data.frame(data    = "This is a test",
 
 xindex(data ~ A:author + content, df, path)
 
-## Expect empty list.
-stopifnot(identical(xsearch(path, "Widgren"),
-                    structure(list(), class = "xapian_search")))
+## Expect no hit: NULL
+stopifnot(identical(xsearch(path, "Widgren"), NULL))
 
 ## Expect one hit.
-search_2 <- structure(list(
-    structure(list( docid = 1L, rank = 0L, percent = 100L,
-                   data = "This is a test"),
-              .Names = c( "docid", "rank", "percent", "data"),
-              class = "xapian_match")), class = "xapian_search")
-
 prefix <- data.frame(field = "author", prefix = "A")
 
 stopifnot(identical(xsearch(path, "author:Widgren", prefix),
-                    search_2))
+                    structure(list(structure(list(docid = 1L,
+                    rank = 0L, percent = 100L, data = "This is a test"),
+                    .Names = c( "docid", "rank", "percent", "data"),
+                    class = "xapian_match")), class = "xapian_search")))
 
-## Expect empty list without prefix
-stopifnot(identical(xsearch(path, "author:Widgren"),
-                    structure(list(), class = "xapian_search")))
+## Expect no hit without prefix: NULL
+stopifnot(identical(xsearch(path, "author:Widgren"), NULL))
 
 ## Cleanup
 unlink(path, recursive=TRUE)

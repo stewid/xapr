@@ -121,34 +121,37 @@ xapr_search(
     size_t _offset = INTEGER(offset)[0];
     size_t _pagesize = INTEGER(pagesize)[0];
     MSet matches = enquire.get_mset(_offset, _pagesize);
-    PROTECT(result = allocVector(VECSXP, matches.size()));
-    for (MSetIterator i = matches.begin(); i != matches.end(); ++i) {
-        const size_t n_items = 4;
-        SEXP item, names;
-        size_t j = 0;
 
-        PROTECT(item = allocVector(VECSXP, n_items));
-        PROTECT(names = allocVector(STRSXP, n_items));
+    if (matches.size()) {
+        PROTECT(result = allocVector(VECSXP, matches.size()));
+        for (MSetIterator i = matches.begin(); i != matches.end(); ++i) {
+            const size_t n_items = 4;
+            SEXP item, names;
+            size_t j = 0;
 
-        SET_STRING_ELT(names, j, mkChar("docid"));
-        SET_VECTOR_ELT(item, j++, ScalarInteger(*i));
+            PROTECT(item = allocVector(VECSXP, n_items));
+            PROTECT(names = allocVector(STRSXP, n_items));
 
-        SET_STRING_ELT(names, j, mkChar("rank"));
-        SET_VECTOR_ELT(item, j++, ScalarInteger(i.get_rank()));
+            SET_STRING_ELT(names, j, mkChar("docid"));
+            SET_VECTOR_ELT(item, j++, ScalarInteger(*i));
 
-        SET_STRING_ELT(names, j, mkChar("percent"));
-        SET_VECTOR_ELT(item, j++, ScalarInteger(i.get_percent()));
+            SET_STRING_ELT(names, j, mkChar("rank"));
+            SET_VECTOR_ELT(item, j++, ScalarInteger(i.get_rank()));
 
-        SET_STRING_ELT(names, j, mkChar("data"));
-        SET_VECTOR_ELT(
-            item,
-            j++,
-            ScalarString(mkChar(i.get_document().get_data().c_str())));
+            SET_STRING_ELT(names, j, mkChar("percent"));
+            SET_VECTOR_ELT(item, j++, ScalarInteger(i.get_percent()));
 
-        setAttrib(item, R_NamesSymbol, names);
-        setAttrib(item, R_ClassSymbol, mkString("xapian_match"));
-        SET_VECTOR_ELT(result, i.get_rank() - _offset, item);
-        UNPROTECT(2);
+            SET_STRING_ELT(names, j, mkChar("data"));
+            SET_VECTOR_ELT(
+                item,
+                j++,
+                ScalarString(mkChar(i.get_document().get_data().c_str())));
+
+            setAttrib(item, R_NamesSymbol, names);
+            setAttrib(item, R_ClassSymbol, mkString("xapian_match"));
+            SET_VECTOR_ELT(result, i.get_rank() - _offset, item);
+            UNPROTECT(2);
+        }
     }
 
     if (R_NilValue != result) {
