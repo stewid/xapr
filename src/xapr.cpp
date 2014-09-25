@@ -17,6 +17,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <sstream>
 #include <xapian.h>
 #include <Rinternals.h>
 
@@ -203,8 +204,13 @@ xapr_index(
     for (size_t row = 0, n_row = INTEGER(nrow)[0]; row < n_row; ++row) {
         Document document;
 
-        if (R_NilValue != data)
+        if (R_NilValue == data) {
+            ostringstream buf;
+            buf << (row + 1); // Give the 1-based row number in the data.frame
+            document.set_data(buf.str());
+        } else {
             document.set_data(CHAR(STRING_ELT(VECTOR_ELT(df, INTEGER(data)[0] - 1), row)));
+        }
         indexer.set_document(document);
 
         // Iterate over prefix columns and index non NA values with
