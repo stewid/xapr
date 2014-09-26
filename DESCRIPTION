@@ -2,8 +2,7 @@ Package: xapr
 Title: Access the Xapian search engine from R
 Description: xapr is a package that provides an interface to the
     Xapian search engine from R, allowing both indexing and retrievel
-    operations. NOTE: The package is in a very early development phase
-    and not functional yet.
+    operations.
 Copyright: The package includes the 100 first rows of the museum catalogue
     data released under the Creative Commons Attribution-NonCommercial-
     ShareAlike license (http://creativecommons.org/licenses/by-nc-sa/3.0/)
