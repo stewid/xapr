@@ -112,3 +112,19 @@ ip_7_exp <- structure(list(data = NULL, text = integer(0),
 ip_7_obs <- xapr:::index_plan(~X:., cols)
 str(ip_7_obs)
 stopifnot(identical(ip_7_obs, ip_7_exp))
+
+##
+## Test case 8
+##
+ip_8_exp <- structure(list(data = NULL, text = integer(0),
+                           prefix = structure(list(lbl = c("XID_NUMBER",
+                           "XITEM_NAME", "XTITLE", "XMAKER", "XDATE_MADE",
+                           "XPLACE_MADE", "XMATERIALS", "XMEASUREMENTS",
+                           "XDESCRIPTION", "XWHOLE_PART", "XCOLLECTION",
+                           "XDATA"), col = 1:12, wdf = c(1L, 1L, 1L, 1L, 1L,
+                           1L, 1L, 1L, 1L, 1L, 1L, 1L)), .Names = c("lbl",
+                           "col", "wdf")), id = NULL),
+                      .Names = c("data", "text", "prefix", "id"))
+ip_8_obs <- xapr:::index_plan(~X:. + X:id_NUMBER, cols)
+str(ip_8_obs)
+stopifnot(identical(ip_8_obs, ip_8_exp))

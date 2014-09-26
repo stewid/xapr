@@ -61,12 +61,15 @@ index_plan <- function(formula, colnames) {
 
         if (length(prefix)) {
             ## Replace '.' with colnames
-            prefix <- as.character(sapply(prefix, function(x) {
+            prefix <- sapply(prefix, function(x) {
                 x <- unlist(strsplit(x, ":"))
                 if (identical(x[2], "."))
                     return(paste0(x[1], ":", colnames))
                 return(paste0(x[1], ":", x[2]))
-            }))
+            })
+
+            ## Make sure we have no duplicates
+            prefix <- unique(unlist(prefix, use.names = FALSE))
 
             ## Extract prefix label and column index
             prefix_lbl <- sapply(strsplit(prefix, ":"), "[", 1)
