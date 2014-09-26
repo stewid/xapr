@@ -4,6 +4,11 @@ Description: xapr is a package that provides an interface to the
     Xapian search engine from R, allowing both indexing and retrievel
     operations. NOTE: The package is in a very early development phase
     and not functional yet.
+Copyright: The package includes the 100 first rows of the museum catalogue
+    data released under the Creative Commons Attribution-NonCommercial-
+    ShareAlike license (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+    by the Science Museum in London, UK.
+    (http://api.sciencemuseum.org.uk/documentation/collections/)
 Version: 0.0.1
 Authors@R: c(person("Stefan", "Widgren", role = c("aut", "cre"),
     email = "stefan.widgren@gmail.com"))
