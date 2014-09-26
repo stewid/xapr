@@ -269,6 +269,11 @@ xindex <- function(formula,
 
     ip <- index_plan(formula, colnames(data))
 
+    ## Coerce columns to character vector
+    for (i in unique(c(ip$data, ip$text, ip$prefix$col, ip$id))) {
+        data[, i] <- as.character(data[, i])
+    }
+
     .Call("xapr_index",
           path,
           data,
