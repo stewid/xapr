@@ -200,25 +200,36 @@ index_plan <- function(formula, colnames) {
 ##'
 ##' The specification '~X*.' creates prefix terms with all columns
 ##' plus free text.
-##'
-##' The specification '~X:.' creates prefix terms with all columns
 ##' @export
 ##' @examples
 ##' \dontrun{
 ##' library(jsonlite)
 ##'
-##' ## Read data
+##' ## This example is borrowed from "Getting Started with Xapian"
+##' ## http://getting-started-with-xapian.readthedocs.org/en/latest/index.html
+##' ## were the example is implemented in Python.
+##' ##
+##' ## We are going to build a simple search system based on museum catalogue
+##' ## data released under the Creative Commons Attribution-NonCommercial-
+##' ## ShareAlike license (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+##' ## by the Science Museum in London, UK.
+##' ## (http://api.sciencemuseum.org.uk/documentation/collections/)
+##'
+##' ## The first 100 rows of the museum catalogue data is distributed with
+##' ## the 'xapr' package
 ##' filename <- system.file("extdata/NMSI_100.csv", package="xapr")
 ##' nmsi <- read.csv(filename, as.is = TRUE)
+##'
+##' ## Create a temporary directory to hold the database
+##' path <- tempfile(pattern="xapr-")
+##' dir.create(path)
 ##'
 ##' ## Store all the fields for display purposes
 ##' nmsi$data <- sapply(seq_len(nrow(nmsi)), function(i) {
 ##'     as.character(toJSON(nmsi[i,]))
 ##' })
 ##'
-##' ## Index the data to a temporary database
-##' path <- tempfile(pattern="xapr-")
-##' dir.create(path)
+##' ## Index the data
 ##' xindex(data ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
 ##' }
 xindex <- function(formula,
