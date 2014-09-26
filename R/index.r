@@ -88,6 +88,9 @@ index_plan <- function(formula, colnames) {
                 prefix_lbl[i] <- paste0(prefix_lbl[i],
                                         toupper(colnames[prefix_col[i]]))
             }
+
+            if (any(table(prefix_lbl) > 1))
+                stop("Invalid index formula")
         } else {
             prefix_lbl <- character(0)
             prefix_col <- integer(0)
