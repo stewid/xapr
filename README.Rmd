@@ -49,8 +49,7 @@ ShareAlike license (http://creativecommons.org/licenses/by-nc-sa/3.0/)
 by the Science Museum in London, UK.
 (http://api.sciencemuseum.org.uk/documentation/collections/)
 
-
-```r
+```{r, index, message = FALSE}
 library(xapr)
 library(jsonlite)
 
@@ -82,8 +81,7 @@ $ sudo apt-get install libxapian-dev
 To install the development version of `xapr`, it's easiest to use the
 devtools package:
 
-
-```r
+```{r, install, eval = FALSE}
 # install.packages("devtools")
 library(devtools)
 install_github("stewid/xapr")
