@@ -64,9 +64,9 @@ void xapr_error(const char *format, const char *func_name, const char *arg)
 /*
  * Search a Xapian database
  *
+ * @param query_string A free-text query
  * @param path A character vector specifying the path to one or more
  * Xapian databases.
- * @param query_string A free-text query
  * @param prefix A data.frame with term prefixes. First column field
  * and second column prefix.
  * @param offset Starting point within result set
@@ -76,8 +76,8 @@ void xapr_error(const char *format, const char *func_name, const char *arg)
  */
 extern "C" SEXP
 xapr_search(
-    SEXP path,
     SEXP query_string,
+    SEXP path,
     SEXP prefix,
     SEXP offset,
     SEXP pagesize,

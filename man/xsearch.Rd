@@ -3,14 +3,14 @@
 \alias{xsearch}
 \title{Search a Xapian database}
 \usage{
-xsearch(path, query, prefix = NULL, offset = 0, pagesize = 10,
+xsearch(query, path, prefix = NULL, offset = 0, pagesize = 10,
   wildcard = FALSE)
 }
 \arguments{
+\item{query}{A free-text query}
+
 \item{path}{A character vector specifying the path to one or more
 Xapian databases.}
-
-\item{query}{A free-text query}
 
 \item{prefix}{A data.frame with term prefixes. First column field
 and second column prefix, e.g. \code{data.frame(field="author",

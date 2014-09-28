@@ -17,9 +17,9 @@
 
 ##' Search a Xapian database
 ##'
+##' @param query A free-text query
 ##' @param path A character vector specifying the path to one or more
 ##' Xapian databases.
-##' @param query A free-text query
 ##' @param prefix A data.frame with term prefixes. First column field
 ##' and second column prefix, e.g. \code{data.frame(field="author",
 ##' prefix="A")}. Default NULL.
@@ -31,8 +31,8 @@
 ##' etc. Default is FALSE.
 ##' @return \code{xapian_search} object with result
 ##' @export
-xsearch <- function(path,
-                    query,
+xsearch <- function(query,
+                    path,
                     prefix = NULL,
                     offset   = 0,
                     pagesize = 10,
@@ -53,8 +53,8 @@ xsearch <- function(path,
 
     .Call(
         "xapr_search",
-        path,
         query,
+        path,
         prefix,
         as.integer(offset),
         as.integer(pagesize),
