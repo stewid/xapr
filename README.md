@@ -10,7 +10,7 @@ indexing and retrievel operations. A great introduction to
 
 ## Indexing
 
-Index the content of a \code{data.frame} to documents with the Xapian
+Index the content of a `data.frame` to documents with the Xapian
 search engine A `document` is the data returned from a search.
 
 The index plan is specified symbolically. An index plan has the form
