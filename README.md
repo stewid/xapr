@@ -66,8 +66,28 @@ dir.create(path)
 ## Store all the fields for display purposes
 nmsi$data <- sapply(seq_len(nrow(nmsi)), function(i) {toJSON(nmsi[i,])})
 
-## Index the data
+## Index the 'TITLE' and 'DESCRIPTION' fields with both a suitable
+## prefix and without a prefix for general search. Use the 'id_NUMBER'
+## as unique identifier.
 xindex(data ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
+
+## Run a search
+result <- xsearch("watch", path)
+
+## Display something about each match.
+sapply(result, function(x) {
+    sprintf("%i: #%3.3i %s", x$rank + 1, x$docid, fromJSON(x$data)$TITLE)
+})
+```
+
+```
+#> [1] "1: #004 Watch with Chinese duplex escapement"
+#> [2] "2: #018 Solar/Sidereal verge watch with epicyclic maintaining power"
+#> [3] "3: #013 Watch timer by P"
+#> [4] "4: #033 A device by Favag of Neuchatel which enables a stop watch to"
+#> [5] "5: #015 Ingersoll \"Dan Dare\" automaton pocket watch with pin-pallet"
+#> [6] "6: #036 Universal 'Tri-Compax' chronographic wrist watch"
+#> [7] "7: #046 Model by Dent of mechanism for setting hands and winding up"
 ```
 
 ## Installation

@@ -49,7 +49,7 @@ ShareAlike license (http://creativecommons.org/licenses/by-nc-sa/3.0/)
 by the Science Museum in London, UK.
 (http://api.sciencemuseum.org.uk/documentation/collections/)
 
-```{r, index, message = FALSE}
+```{r, index, message = FALSE, comment = "#>"}
 library(xapr)
 library(jsonlite)
 
@@ -65,8 +65,18 @@ dir.create(path)
 ## Store all the fields for display purposes
 nmsi$data <- sapply(seq_len(nrow(nmsi)), function(i) {toJSON(nmsi[i,])})
 
-## Index the data
+## Index the 'TITLE' and 'DESCRIPTION' fields with both a suitable
+## prefix and without a prefix for general search. Use the 'id_NUMBER'
+## as unique identifier.
 xindex(data ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
+
+## Run a search
+result <- xsearch("watch", path)
+
+## Display something about each match.
+sapply(result, function(x) {
+    sprintf("%i: #%3.3i %s", x$rank + 1, x$docid, fromJSON(x$data)$TITLE)
+})
 ```
 
 ## Installation
