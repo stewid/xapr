@@ -183,8 +183,8 @@ index_plan <- function(formula, colnames) {
 ##' @return NULL
 ##' @details The index plan for 'xindex' are specified
 ##' symbolically. An index plan has the form 'data ~ terms' where
-##' 'data' is the blob of data returned from a request and 'terms' is
-##' the basis for a search in Xapian. A first order term index the
+##' 'data' is the blob of data returned from a request and the 'terms'
+##' are the basis for a search in Xapian. A first order term index the
 ##' text in the column as free text. A specification of the form
 ##' 'first:second' indicates that the text in 'second' should be
 ##' indexed with prefix 'first'.
@@ -207,11 +207,14 @@ index_plan <- function(formula, colnames) {
 ##'
 ##' The specification '~X*.' creates prefix terms with all columns
 ##' plus free text.
+##'
+##' If the response contains more than one column, e.g. 'col_1 + col_2
+##' ~ X*.' the response is first converted to 'JSON'. A compact form
+##' to convert all fields to 'JSON' and to enable free text search on
+##' all fields is to use '.~.'.
 ##' @export
 ##' @examples
 ##' \dontrun{
-##' library(jsonlite)
-##'
 ##' ## This example is borrowed from "Getting Started with Xapian"
 ##' ## http://getting-started-with-xapian.readthedocs.org/en/latest/index.html
 ##' ## were the example is implemented in Python.
@@ -231,13 +234,19 @@ index_plan <- function(formula, colnames) {
 ##' path <- tempfile(pattern="xapr-")
 ##' dir.create(path)
 ##'
-##' ## Store all the fields for display purposes
-##' nmsi$data <- sapply(seq_len(nrow(nmsi)), function(i) {
-##'     as.character(toJSON(nmsi[i,]))
-##' })
+##' ## Index the 'TITLE' and 'DESCRIPTION' fields with both a suitable
+##' ## prefix and without a prefix for general search. Use the 'id_NUMBER'
+##' ## as unique identifier. Store all the fields as JSON for display
+##' ## purposes.
+##' xindex(. ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
 ##'
-##' ## Index the data
-##' xindex(data ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
+##' ## Run a search
+##' result <- xsearch("watch", path)
+##'
+##' ## Display something about each match.
+##' sapply(result, function(x) {
+##'     sprintf("%i: #%3.3i %s", x$rank + 1, x$docid, fromJSON(x$data)$TITLE)
+##' })
 ##' }
 xindex <- function(formula,
                    data,
@@ -276,8 +285,18 @@ xindex <- function(formula,
 
     ip <- index_plan(formula, colnames(data))
 
+    if (length(ip$data) == 1L) {
+        doc_data <- as.character(data[, ip$data[1]])
+    } else if (length(ip$data) > 1L) {
+        doc_data <- sapply(seq_len(nrow(data)), function(i) {
+            toJSON(data[i, ip$data])
+        })
+    } else {
+        doc_data <- NULL
+    }
+
     ## Coerce columns to character vector
-    for (i in unique(c(ip$data, ip$text, ip$prefix$col, ip$id))) {
+    for (i in unique(c(ip$text, ip$prefix$col, ip$id))) {
         data[, i] <- as.character(data[, i])
     }
 
@@ -285,7 +304,7 @@ xindex <- function(formula,
           path,
           data,
           nrow(data),
-          ip$data,
+          doc_data,
           ip$text,
           ip$prefix$lbl,
           ip$prefix$col,

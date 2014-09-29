@@ -170,8 +170,7 @@ xapr_search(
  * @param path A character vector specifying the path to a Xapian databases.
  * @param df The \code{data.frame} to index.
  * @param nrow Number of rows in the data.frame to index.
- * @param data The column in 'df' with content to add to the
- * document. Note: 1 based column index.
+ * @param data The content to add to the document.
  * @param text The column(s) in 'df' with content to index. Note: 1
  * based column index.
  * @param prefix_lbl A character vector with the prefix to use for
@@ -213,7 +212,7 @@ xapr_index(
             buf << (row + 1); // Give the 1-based row number in the data.frame
             document.set_data(buf.str());
         } else {
-            document.set_data(CHAR(STRING_ELT(VECTOR_ELT(df, INTEGER(data)[0] - 1), row)));
+            document.set_data(CHAR(STRING_ELT(data, row)));
         }
         indexer.set_document(document);
 
