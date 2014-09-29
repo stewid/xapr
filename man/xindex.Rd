@@ -33,8 +33,8 @@ engine.
 \details{
 The index plan for 'xindex' are specified
 symbolically. An index plan has the form 'data ~ terms' where
-'data' is the blob of data returned from a request and 'terms' is
-the basis for a search in Xapian. A first order term index the
+'data' is the blob of data returned from a request and the 'terms'
+are the basis for a search in Xapian. A first order term index the
 text in the column as free text. A specification of the form
 'first:second' indicates that the text in 'second' should be
 indexed with prefix 'first'.
@@ -57,11 +57,14 @@ as data to the document.
 
 The specification '~X*.' creates prefix terms with all columns
 plus free text.
+
+If the response contains more than one column, e.g. 'col_1 + col_2
+~ X*.' the response is first converted to 'JSON'. A compact form
+to convert all fields to 'JSON' and to enable free text search on
+all fields is to use '.~.'.
 }
 \examples{
 \dontrun{
-library(jsonlite)
-
 ## This example is borrowed from "Getting Started with Xapian"
 ## http://getting-started-with-xapian.readthedocs.org/en/latest/index.html
 ## were the example is implemented in Python.
@@ -81,13 +84,19 @@ nmsi <- read.csv(filename, as.is = TRUE)
 path <- tempfile(pattern="xapr-")
 dir.create(path)
 
-## Store all the fields for display purposes
-nmsi$data <- sapply(seq_len(nrow(nmsi)), function(i) {
-    as.character(toJSON(nmsi[i,]))
-})
+## Index the 'TITLE' and 'DESCRIPTION' fields with both a suitable
+## prefix and without a prefix for general search. Use the 'id_NUMBER'
+## as unique identifier. Store all the fields as JSON for display
+## purposes.
+xindex(. ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
 
-## Index the data
-xindex(data ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
+## Run a search
+result <- xsearch("watch", path)
+
+## Display something about each match.
+sapply(result, function(x) {
+    sprintf("\%i: #\%3.3i \%s", x$rank + 1, x$docid, fromJSON(x$data)$TITLE)
+})
 }
 }
 

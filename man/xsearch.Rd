@@ -12,9 +12,8 @@ xsearch(query, path, prefix = NULL, offset = 0, pagesize = 10,
 \item{path}{A character vector specifying the path to one or more
 Xapian databases.}
 
-\item{prefix}{A data.frame with term prefixes. First column field
-and second column prefix, e.g. \code{data.frame(field="author",
-prefix="A")}. Default NULL.}
+\item{prefix}{A formula specification with term prefixes. Default
+NULL. See 'Details'.}
 
 \item{offset}{Starting point within result set. Default 0.}
 
@@ -30,5 +29,9 @@ etc. Default is FALSE.}
 }
 \description{
 Search a Xapian database
+}
+\details{
+The term prefixes are specified symbolically. The
+prefixes has the form '~field:prefix'.
 }
 
