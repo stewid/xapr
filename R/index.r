@@ -28,10 +28,17 @@ index_plan <- function(formula, colnames) {
     ## Help function to extract the data column
     data_column <- function(data, colnames) {
         if (!is.null(data)) {
-            data <- match(data, colnames)
-            if (!identical(length(data), 1L))
+            data <- unlist(lapply(data, function(col) {
+                if (identical(col, "."))
+                    col <- colnames
+                col
+            }))
+
+            data <- match(unique(data), colnames)
+            ## Check that all column names are mapped
+            if (any(sapply(data, is.null)))
                 stop("Invalid index formula")
-            if (is.na(data[1]))
+            if (any(sapply(data, is.na)))
                 stop("Invalid index formula")
         }
         data

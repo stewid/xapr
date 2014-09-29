@@ -144,3 +144,14 @@ ip_9_exp <- structure(list(data = NULL, text = 1:12,
 ip_9_obs <- xapr:::index_plan(~X*. + X:id_NUMBER, cols)
 str(ip_9_obs)
 stopifnot(identical(ip_9_obs, ip_9_exp))
+
+##
+## Test case 9
+##
+ip_10_exp <- structure(list(data = 1:12, text = 1:12, prefix = structure(
+                       list(lbl = character(0), col = integer(0),
+                       wdf = integer(0)), .Names = c("lbl", "col", "wdf")),
+                       id = NULL), .Names = c("data", "text", "prefix", "id"))
+ip_10_obs <- xapr:::index_plan(.~., cols)
+str(ip_10_obs)
+stopifnot(identical(ip_10_obs, ip_10_exp))
