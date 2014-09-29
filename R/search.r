@@ -15,14 +15,53 @@
 ##  with this program; if not, write to the Free Software Foundation, Inc.,
 ##  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
+##' Prefix plan
+##'
+##' Extract the term prefixes
+##' @param formula The term prefixes formula specification.
+##' @return :TODO:DOCUMENTATION:
+##' @keywords internal
+prefix_plan <- function(formula) {
+    term_prefixes <- c("A" ,"D", "E", "G", "H", "I", "K", "L", "M",
+                       "N", "O", "P", "Q", "R", "S", "T", "U", "V",
+                       "X", "Y", "Z")
+
+    ## Extract response variable
+    response <- attr(terms(formula), "response")
+    if (response)
+        stop("Invalid prefix formula")
+
+    if (!all(sapply(attr(terms(formula), "order"), identical, 2L)))
+        stop("Invalid prefix formula")
+
+    prefix <- unique(attr(terms(formula), "term.labels"))
+    prefix <- sapply(prefix,
+                       function(prefix) {
+                           ## Make sure the first term is the prefix
+                           prefix <- unlist(strsplit(prefix, ":"))
+                           if (prefix[1] %in% term_prefixes)
+                               return(paste0(rev(prefix), collapse=":"))
+                           if (prefix[2] %in% term_prefixes)
+                               return(paste0(prefix, collapse=":"))
+                           stop("Invalid index formula")
+                       })
+    names(prefix) <- NULL
+
+    ## Extract field and prefix
+    field <- sapply(strsplit(prefix, ":"), "[", 1)
+    prefix <- sapply(strsplit(prefix, ":"), "[", 2)
+
+    list(field  = field,
+         prefix = prefix)
+}
+
 ##' Search a Xapian database
 ##'
 ##' @param query A free-text query
 ##' @param path A character vector specifying the path to one or more
 ##' Xapian databases.
-##' @param prefix A data.frame with term prefixes. First column field
-##' and second column prefix, e.g. \code{data.frame(field="author",
-##' prefix="A")}. Default NULL.
+##' @param prefix A formula specification with term prefixes. Default
+##' NULL. See 'Details'.
 ##' @param offset Starting point within result set. Default 0.
 ##' @param pagesize Number of records to retrieve. Default 10.
 ##' @param wildcard Support searches using a trailing '*' wildcard,
