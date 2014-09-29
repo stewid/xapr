@@ -76,7 +76,7 @@ result <- xsearch("watch", path)
 
 ## Display something about each match.
 sapply(result, function(x) {
-    sprintf("%i: #%3.3i %s", x$rank + 1, x$docid, fromJSON(x$data)$TITLE)
+    sprintf("#%3.3i %s", x$docid, fromJSON(x$data)$TITLE)
 })
 ```
 
