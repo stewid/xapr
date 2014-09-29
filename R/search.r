@@ -69,6 +69,8 @@ prefix_plan <- function(formula) {
 ##' match wildcard, wildcarded, wildcards, wildcat, wildcats,
 ##' etc. Default is FALSE.
 ##' @return \code{xapian_search} object with result
+##' @details The term prefixes are specified symbolically. The
+##' prefixes has the form '~field:prefix'.
 ##' @export
 xsearch <- function(query,
                     path,
@@ -78,23 +80,20 @@ xsearch <- function(query,
                     wildcard = FALSE)
 {
     if (!is.null(prefix)) {
-        if (!is.data.frame(prefix))
-            stop("'prefix' must be a data.frame")
-        if (is.factor(prefix$field))
-            prefix$field <- as.character(prefix$field)
-        if (!is.character(prefix$field))
-            stop(paste0("'prefix$$field' must be a character"))
-        if (is.factor(prefix$prefix))
-            prefix$prefix <- as.character(prefix$prefix)
-        if (!is.character(prefix$prefix))
-            stop(paste0("'prefix$$prefix' must be a character"))
+        if (!is(prefix, "formula"))
+            stop("'prefix' must be a 'formula'")
+        prefix <- prefix_plan(prefix)
+    } else {
+        prefix <- list(field  = character(0),
+                       prefix = character(0))
     }
 
     .Call(
         "xapr_search",
         query,
         path,
-        prefix,
+        prefix$field,
+        prefix$prefix,
         as.integer(offset),
         as.integer(pagesize),
         wildcard,

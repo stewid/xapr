@@ -67,8 +67,8 @@ void xapr_error(const char *format, const char *func_name, const char *arg)
  * @param query_string A free-text query
  * @param path A character vector specifying the path to one or more
  * Xapian databases.
- * @param prefix A data.frame with term prefixes. First column field
- * and second column prefix.
+ * @param field A character vector with field of the prefix
+ * @param prefix A character vector with prefix for field.
  * @param offset Starting point within result set
  * @param pagesize Number of records to retrieve
  * @param wildcard Support trailing wildcard searches.
@@ -78,6 +78,7 @@ extern "C" SEXP
 xapr_search(
     SEXP query_string,
     SEXP path,
+    SEXP field,
     SEXP prefix,
     SEXP offset,
     SEXP pagesize,
@@ -105,11 +106,11 @@ xapr_search(
     // Check if there are any prefix
     size_t n_prefix = 0;
     if (R_NilValue != prefix)
-        n_prefix = Rf_length(getAttrib(prefix, R_RowNamesSymbol));
+        n_prefix = Rf_length(prefix);
     for (size_t i = 0; i < n_prefix; ++i) {
-        SEXP field_item = STRING_ELT(VECTOR_ELT(prefix, 0), i);
+        SEXP field_item = STRING_ELT(field, i);
         if (NA_STRING != field_item) {
-            SEXP prefix_item = STRING_ELT(VECTOR_ELT(prefix, 1), i);
+            SEXP prefix_item = STRING_ELT(prefix, i);
             if (NA_STRING != prefix_item)
                 qp.add_prefix(CHAR(field_item), CHAR(prefix_item));
         }

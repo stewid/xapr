@@ -30,9 +30,7 @@ xindex(data ~ A:author + content, df, path)
 stopifnot(identical(xsearch("Widgren", path), NULL))
 
 ## Expect one hit.
-prefix <- data.frame(field = "author", prefix = "A")
-
-stopifnot(identical(xsearch("author:Widgren", path, prefix),
+stopifnot(identical(xsearch("author:Widgren", path, ~author:A),
                     structure(list(structure(list(docid = 1L,
                     rank = 0L, percent = 100L, data = "This is a test"),
                     .Names = c( "docid", "rank", "percent", "data"),
