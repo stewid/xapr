@@ -81,16 +81,22 @@ search_plan <- function(formula) {
 ##' which matches any number of trailing characters, so wildc* would
 ##' match wildcard, wildcarded, wildcards, wildcat, wildcats,
 ##' etc. Default is FALSE.
+##' @param view Invoke a text editor on the result before
+##' returning. This enables editing the result before it's
+##' returned. The editor is only opened if there are any response
+##' variables supplied in the prefix formula.
 ##' @return \code{xapian_search} object with result
 ##' @details The term prefixes are specified symbolically. The
 ##' prefixes has the form '~field:prefix'.
+##' @import plyr
 ##' @export
 xsearch <- function(query,
                     path,
-                    prefix = NULL,
+                    prefix   = NULL,
                     offset   = 0,
                     pagesize = 10,
-                    wildcard = FALSE)
+                    wildcard = FALSE,
+                    view     = FALSE)
 {
     if (!is.null(prefix)) {
         if (!is(prefix, "formula"))
@@ -124,8 +130,11 @@ xsearch <- function(query,
                     fromJSON(x$data)[,sp$data, drop=FALSE]
                 })
             }
-            result <- do.call("rbind", result)
+            result <- rbind.fill(result)
             rownames(result) <- rn
+
+            if (view)
+                result <- edit(result)
         } else {
             result <- lapply(seq_len(length(sp$data)), function(i) character(0))
             result <- as.data.frame(result, stringsAsFactors = FALSE)
