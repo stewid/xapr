@@ -20,9 +20,10 @@ library(xapr)
 ##
 ## Test case 1
 ##
-sp_1_exp <- structure(list(field = c("author", "title"),
+sp_1_exp <- structure(list(data = NULL,
+                           field = c("author", "title"),
                            prefix = c("A", "S")),
-                      .Names = c("field", "prefix"))
+                      .Names = c("data", "field", "prefix"))
 sp_1_obs <- xapr:::search_plan(~author:A+title:S)
 str(sp_1_obs)
 stopifnot(identical(sp_1_obs, sp_1_exp))
@@ -30,9 +31,21 @@ stopifnot(identical(sp_1_obs, sp_1_exp))
 ##
 ## Test case 2
 ##
-sp_2_exp <- structure(list(field = "description",
+sp_2_exp <- structure(list(data = NULL,
+                           field = "description",
                            prefix = "XDESCRIPTION"),
-                      .Names = c("field", "prefix"))
+                      .Names = c("data", "field", "prefix"))
 sp_2_obs <- xapr:::search_plan(~description:XDESCRIPTION)
 str(sp_2_obs)
 stopifnot(identical(sp_2_obs, sp_2_exp))
+
+##
+## Test case 3
+##
+sp_3_exp <- structure(list(data = c("col1", "col2"),
+                           field = "description",
+                           prefix = "XDESCRIPTION"),
+                      .Names = c("data", "field", "prefix"))
+sp_3_obs <- xapr:::search_plan(col1+col2~description:XDESCRIPTION)
+str(sp_3_obs)
+stopifnot(identical(sp_3_obs, sp_3_exp))

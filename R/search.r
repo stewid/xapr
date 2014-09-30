@@ -28,8 +28,16 @@ search_plan <- function(formula) {
 
     ## Extract response variable
     response <- attr(terms(formula), "response")
-    if (response)
-        stop("Invalid search formula")
+    if (response) {
+        vars <- attr(terms(formula), "variables")[-1]
+        data <- as.character(vars[response])
+
+        ## Handle "col1 + col2" etc
+        data <- unlist(strsplit(data, "+", fixed=TRUE))
+        data <- sub("^\\s", "", sub("\\s$", "", data))
+    } else {
+        data <- NULL
+    }
 
     if (!all(sapply(attr(terms(formula), "order"), identical, 2L)))
         stop("Invalid search formula")
@@ -51,7 +59,8 @@ search_plan <- function(formula) {
     field <- sapply(strsplit(prefix, ":"), "[", 1)
     prefix <- sapply(strsplit(prefix, ":"), "[", 2)
 
-    list(field  = field,
+    list(data   = data,
+         field  = field,
          prefix = prefix)
 }
 
