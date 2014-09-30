@@ -23,6 +23,8 @@ Biarch: true
 NeedsCompilation: yes
 Date: 2014-09-12
 Collate:
+    'S4_classes.r'
+    'database.r'
     'index.r'
     'search.r'
     'xapr.r'
