@@ -15,6 +15,7 @@ Imports:
     plyr
 Depends:
     R (>= 3.0.2),
+    methods,
     jsonlite
 License: GPL (>= 2)
 URL: https://github.com/stewid/xapr

@@ -19,6 +19,7 @@
 ##'
 ##' @docType package
 ##' @name xapr
+##' @import methods
 ##' @import jsonlite
 ##' @include xapr.r
 ##' @useDynLib xapr
