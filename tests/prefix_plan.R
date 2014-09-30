@@ -20,19 +20,19 @@ library(xapr)
 ##
 ## Test case 1
 ##
-pp_1_exp <- structure(list(field = c("author", "title"),
+sp_1_exp <- structure(list(field = c("author", "title"),
                            prefix = c("A", "S")),
                       .Names = c("field", "prefix"))
-pp_1_obs <- xapr:::prefix_plan(~author:A+title:S)
-str(pp_1_obs)
-stopifnot(identical(pp_1_obs, pp_1_exp))
+sp_1_obs <- xapr:::search_plan(~author:A+title:S)
+str(sp_1_obs)
+stopifnot(identical(sp_1_obs, sp_1_exp))
 
 ##
 ## Test case 2
 ##
-pp_2_exp <- structure(list(field = "description",
+sp_2_exp <- structure(list(field = "description",
                            prefix = "XDESCRIPTION"),
                       .Names = c("field", "prefix"))
-pp_2_obs <- xapr:::prefix_plan(~description:XDESCRIPTION)
-str(pp_2_obs)
-stopifnot(identical(pp_2_obs, pp_2_exp))
+sp_2_obs <- xapr:::search_plan(~description:XDESCRIPTION)
+str(sp_2_obs)
+stopifnot(identical(sp_2_obs, sp_2_exp))

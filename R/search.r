@@ -15,13 +15,13 @@
 ##  with this program; if not, write to the Free Software Foundation, Inc.,
 ##  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-##' Prefix plan
+##' Search plan
 ##'
 ##' Extract the term prefixes
 ##' @param formula The term prefixes formula specification.
 ##' @return :TODO:DOCUMENTATION:
 ##' @keywords internal
-prefix_plan <- function(formula) {
+search_plan <- function(formula) {
     term_prefixes <- c("A" ,"D", "E", "G", "H", "I", "K", "L", "M",
                        "N", "O", "P", "Q", "R", "S", "T", "U", "V",
                        "X", "Y", "Z")
@@ -29,10 +29,10 @@ prefix_plan <- function(formula) {
     ## Extract response variable
     response <- attr(terms(formula), "response")
     if (response)
-        stop("Invalid prefix formula")
+        stop("Invalid search formula")
 
     if (!all(sapply(attr(terms(formula), "order"), identical, 2L)))
-        stop("Invalid prefix formula")
+        stop("Invalid search formula")
 
     prefix <- unique(attr(terms(formula), "term.labels"))
     prefix <- sapply(prefix,
@@ -43,7 +43,7 @@ prefix_plan <- function(formula) {
                                return(paste0(rev(prefix), collapse=":"))
                            if (substr(prefix[2], 1, 1) %in% term_prefixes)
                                return(paste0(prefix, collapse=":"))
-                           stop("Invalid prefix formula")
+                           stop("Invalid search formula")
                        })
     names(prefix) <- NULL
 
@@ -82,18 +82,18 @@ xsearch <- function(query,
     if (!is.null(prefix)) {
         if (!is(prefix, "formula"))
             stop("'prefix' must be a 'formula'")
-        prefix <- prefix_plan(prefix)
+        sp <- search_plan(prefix)
     } else {
-        prefix <- list(field  = character(0),
-                       prefix = character(0))
+        sp <- list(field  = character(0),
+                   prefix = character(0))
     }
 
     .Call(
         "xapr_search",
         query,
         path,
-        prefix$field,
-        prefix$prefix,
+        sp$field,
+        sp$prefix,
         as.integer(offset),
         as.integer(pagesize),
         wildcard,
