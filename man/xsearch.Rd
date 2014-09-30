@@ -4,7 +4,7 @@
 \title{Search a Xapian database}
 \usage{
 xsearch(query, path, prefix = NULL, offset = 0, pagesize = 10,
-  wildcard = FALSE)
+  wildcard = FALSE, view = FALSE)
 }
 \arguments{
 \item{query}{A free-text query}
@@ -23,6 +23,11 @@ NULL. See 'Details'.}
 which matches any number of trailing characters, so wildc* would
 match wildcard, wildcarded, wildcards, wildcat, wildcats,
 etc. Default is FALSE.}
+
+\item{view}{Invoke a text editor on the result before
+returning. This enables editing the result before it's
+returned. The editor is only opened if there are any response
+variables supplied in the prefix formula.}
 }
 \value{
 \code{xapian_search} object with result

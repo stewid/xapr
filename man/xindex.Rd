@@ -26,6 +26,9 @@ database there.}
 \item{language}{Either the English name for the language or the
 two letter ISO639 code. Default is 'none'}
 }
+\value{
+A \code{\linkS4class{xapian_database}} object.
+}
 \description{
 Index the content of a \code{data.frame} with the Xapian search
 engine.
@@ -78,7 +81,7 @@ all fields is to use '.~.'.
 ## The first 100 rows of the museum catalogue data is distributed with
 ## the 'xapr' package
 filename <- system.file("extdata/NMSI_100.csv", package="xapr")
-nmsi <- read.csv(filename, as.is = TRUE)
+nmsi <- read.csv(filename, as.is = TRUE, na.strings="")
 
 ## Create a temporary directory to hold the database
 path <- tempfile(pattern="xapr-")
@@ -88,15 +91,10 @@ dir.create(path)
 ## prefix and without a prefix for general search. Use the 'id_NUMBER'
 ## as unique identifier. Store all the fields as JSON for display
 ## purposes.
-xindex(. ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
+db <- xindex(. ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
 
 ## Run a search
-result <- xsearch("watch", path)
-
-## Display something about each match.
-sapply(result, function(x) {
-    sprintf("\%i: #\%3.3i \%s", x$rank + 1, x$docid, fromJSON(x$data)$TITLE)
-})
+xsearch("watch", db@path, id_NUMBER + TITLE ~ .)
 }
 }
 
