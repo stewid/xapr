@@ -115,9 +115,16 @@ xsearch <- function(query,
     if (!is.null(sp$data)) {
         if (length(result)) {
             rn <- sapply(result, "[[", "docid")
-            result <- do.call("rbind", lapply(result, function(x) {
-                fromJSON(x$data)[,sp$data, drop=FALSE]
-            }))
+            if (identical(sp$data, ".")) {
+                result <- lapply(result, function(x) {
+                    fromJSON(x$data)
+                })
+            } else {
+                result <- lapply(result, function(x) {
+                    fromJSON(x$data)[,sp$data, drop=FALSE]
+                })
+            }
+            result <- do.call("rbind", result)
             rownames(result) <- rn
         } else {
             result <- lapply(seq_len(length(sp$data)), function(i) character(0))
