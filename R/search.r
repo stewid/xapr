@@ -93,20 +93,36 @@ xsearch <- function(query,
             stop("'prefix' must be a 'formula'")
         sp <- search_plan(prefix)
     } else {
-        sp <- list(field  = character(0),
+        sp <- list(data   = NULL,
+                   field  = character(0),
                    prefix = character(0))
     }
 
-    .Call(
-        "xapr_search",
-        query,
-        path,
-        sp$field,
-        sp$prefix,
-        as.integer(offset),
-        as.integer(pagesize),
-        wildcard,
-        package = "xapr")
+    result <- .Call("xapr_search",
+                    query,
+                    path,
+                    sp$field,
+                    sp$prefix,
+                    as.integer(offset),
+                    as.integer(pagesize),
+                    wildcard,
+                    package = "xapr")
+
+    if (!is.null(sp$data)) {
+        if (length(result)) {
+            rn <- sapply(result, "[[", "docid")
+            result <- do.call("rbind", lapply(result, function(x) {
+                fromJSON(x$data)[,sp$data, drop=FALSE]
+            }))
+            rownames(result) <- rn
+        } else {
+            result <- lapply(seq_len(length(sp$data)), function(i) character(0))
+            result <- as.data.frame(result, stringsAsFactors = FALSE)
+            colnames(result) <- sp$data
+        }
+    }
+
+    result
 }
 
 ##' @export
