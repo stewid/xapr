@@ -11,6 +11,8 @@ Copyright: The package includes the 100 first rows of the museum catalogue
 Version: 0.0.1
 Authors@R: c(person("Stefan", "Widgren", role = c("aut", "cre"),
     email = "stefan.widgren@gmail.com"))
+Imports:
+    plyr
 Depends:
     R (>= 3.0.2),
     jsonlite
