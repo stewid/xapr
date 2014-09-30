@@ -39,11 +39,11 @@ prefix_plan <- function(formula) {
                        function(prefix) {
                            ## Make sure the first term is the prefix
                            prefix <- unlist(strsplit(prefix, ":"))
-                           if (prefix[1] %in% term_prefixes)
+                           if (substr(prefix[1], 1, 1) %in% term_prefixes)
                                return(paste0(rev(prefix), collapse=":"))
-                           if (prefix[2] %in% term_prefixes)
+                           if (substr(prefix[2], 1, 1) %in% term_prefixes)
                                return(paste0(prefix, collapse=":"))
-                           stop("Invalid index formula")
+                           stop("Invalid prefix formula")
                        })
     names(prefix) <- NULL
 
