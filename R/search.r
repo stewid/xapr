@@ -27,9 +27,9 @@ search_plan <- function(formula) {
                        "X", "Y", "Z")
 
     ## Extract response variable
-    response <- attr(terms(formula), "response")
+    response <- attr(terms(formula, allowDotAsName = TRUE), "response")
     if (response) {
-        vars <- attr(terms(formula), "variables")[-1]
+        vars <- attr(terms(formula, allowDotAsName = TRUE), "variables")[-1]
         data <- as.character(vars[response])
 
         ## Handle "col1 + col2" etc
@@ -39,25 +39,29 @@ search_plan <- function(formula) {
         data <- NULL
     }
 
-    if (!all(sapply(attr(terms(formula), "order"), identical, 2L)))
-        stop("Invalid search formula")
-
-    prefix <- unique(attr(terms(formula), "term.labels"))
+    prefix <- attr(terms(formula, allowDotAsName = TRUE), "term.labels")
+    prefix <- prefix[attr(terms(formula, allowDotAsName = TRUE), "order") == 2]
+    prefix <- unique(prefix)
     prefix <- sapply(prefix,
-                       function(prefix) {
-                           ## Make sure the first term is the prefix
-                           prefix <- unlist(strsplit(prefix, ":"))
-                           if (substr(prefix[1], 1, 1) %in% term_prefixes)
-                               return(paste0(rev(prefix), collapse=":"))
-                           if (substr(prefix[2], 1, 1) %in% term_prefixes)
-                               return(paste0(prefix, collapse=":"))
-                           stop("Invalid search formula")
-                       })
+                     function(prefix) {
+                         ## Make sure the first term is the prefix
+                         prefix <- unlist(strsplit(prefix, ":"))
+                         if (substr(prefix[1], 1, 1) %in% term_prefixes)
+                             return(paste0(rev(prefix), collapse=":"))
+                         if (substr(prefix[2], 1, 1) %in% term_prefixes)
+                             return(paste0(prefix, collapse=":"))
+                         stop("Invalid search formula")
+                     })
     names(prefix) <- NULL
 
     ## Extract field and prefix
-    field <- sapply(strsplit(prefix, ":"), "[", 1)
-    prefix <- sapply(strsplit(prefix, ":"), "[", 2)
+    if (length(prefix)) {
+        field <- sapply(strsplit(prefix, ":"), "[", 1)
+        prefix <- sapply(strsplit(prefix, ":"), "[", 2)
+    } else {
+        field <- character(0)
+        prefix <- character(0)
+    }
 
     list(data   = data,
          field  = field,
