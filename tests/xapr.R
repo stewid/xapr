@@ -24,20 +24,20 @@ df <- data.frame(data    = "This is a test",
                  content = "Hello world",
                  stringsAsFactors = FALSE)
 
-xindex(data ~ A:author + content, df, path)
+db <- xindex(data ~ A:author + content, df, path)
 
 ## Expect no hit: NULL
-stopifnot(identical(xsearch("Widgren", path), NULL))
+stopifnot(identical(xsearch("Widgren", db), NULL))
 
 ## Expect one hit.
-stopifnot(identical(xsearch("author:Widgren", path, ~author:A),
+stopifnot(identical(xsearch("author:Widgren", db,  ~author:A),
                     structure(list(structure(list(docid = 1L,
                     rank = 0L, percent = 100L, data = "This is a test"),
                     .Names = c( "docid", "rank", "percent", "data"),
                     class = "xapian_match")), class = "xapian_search")))
 
 ## Expect no hit without prefix: NULL
-stopifnot(identical(xsearch("author:Widgren", path), NULL))
+stopifnot(identical(xsearch("author:Widgren", db), NULL))
 
 ## Cleanup
 unlink(path, recursive=TRUE)

@@ -70,9 +70,10 @@ search_plan <- function(formula) {
 
 ##' Search a Xapian database
 ##'
+##' @rdname xsearch-methods
+##' @docType methods
 ##' @param query A free-text query
-##' @param path A character vector specifying the path to one or more
-##' Xapian databases.
+##' @param db A \code{linkS4class{xapian_database}} object.
 ##' @param prefix A formula specification with term prefixes. Default
 ##' NULL. See 'Details'.
 ##' @param offset Starting point within result set. Default 0.
@@ -86,17 +87,34 @@ search_plan <- function(formula) {
 ##' returned. The editor is only opened if there are any response
 ##' variables supplied in the prefix formula.
 ##' @return \code{xapian_search} object with result
+##' @keywords methods
 ##' @details The term prefixes are specified symbolically. The
 ##' prefixes has the form '~field:prefix'.
 ##' @import plyr
-##' @export
-xsearch <- function(query,
-                    path,
+##' @include S4_classes.r
+setGeneric("xsearch",
+           signature = c("query", "db"),
+           function(query,
+                    db,
                     prefix   = NULL,
                     offset   = 0,
                     pagesize = 10,
                     wildcard = FALSE,
                     view     = FALSE)
+           standardGeneric("xsearch"))
+
+##' @rdname xsearch-methods
+##' @export
+setMethod("xsearch",
+          signature(query = "character",
+                    db    = "xapian_database"),
+          function(query,
+                   db,
+                   prefix,
+                   offset,
+                   pagesize,
+                   wildcard,
+                   view)
 {
     if (!is.null(prefix)) {
         if (!is(prefix, "formula"))
@@ -110,7 +128,7 @@ xsearch <- function(query,
 
     result <- .Call("xapr_search",
                     query,
-                    path,
+                    db@path,
                     sp$field,
                     sp$prefix,
                     as.integer(offset),
@@ -143,7 +161,7 @@ xsearch <- function(query,
     }
 
     result
-}
+})
 
 ##' @export
 print.xapian_match <- function(x, ...)

@@ -94,7 +94,7 @@ dir.create(path)
 db <- xindex(. ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
 
 ## Run a search
-xsearch("watch", db@path, id_NUMBER + TITLE ~ .)
+xsearch("watch", db, id_NUMBER + TITLE ~ .)
 }
 }
 
