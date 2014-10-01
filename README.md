@@ -70,25 +70,21 @@ dir.create(path)
 ## prefix and without a prefix for general search. Use the 'id_NUMBER'
 ## as unique identifier. Store all the fields as JSON for display
 ## purposes.
-xindex(. ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
+db <- xindex(. ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
 
-## Run a search
-result <- xsearch("watch", path)
-
-## Display something about each match.
-sapply(result, function(x) {
-    sprintf("#%3.3i %s", x$docid, fromJSON(x$data)$TITLE)
-})
+## Run a search and display docid (rowname) and TITLE from each match
+xsearch("watch", db, TITLE ~ .)
 ```
 
 ```
-#> [1] "#004 Watch with Chinese duplex escapement"
-#> [2] "#018 Solar/Sidereal verge watch with epicyclic maintaining power"
-#> [3] "#013 Watch timer by P"
-#> [4] "#033 A device by Favag of Neuchatel which enables a stop watch to"
-#> [5] "#015 Ingersoll \"Dan Dare\" automaton pocket watch with pin-pallet"
-#> [6] "#036 Universal 'Tri-Compax' chronographic wrist watch"
-#> [7] "#046 Model by Dent of mechanism for setting hands and winding up"
+#>                                                           TITLE
+#> 4                          Watch with Chinese duplex escapement
+#> 18  Solar/Sidereal verge watch with epicyclic maintaining power
+#> 13                                             Watch timer by P
+#> 33 A device by Favag of Neuchatel which enables a stop watch to
+#> 15  Ingersoll "Dan Dare" automaton pocket watch with pin-pallet
+#> 36             Universal 'Tri-Compax' chronographic wrist watch
+#> 46  Model by Dent of mechanism for setting hands and winding up
 ```
 
 ## Installation

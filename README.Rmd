@@ -69,15 +69,10 @@ dir.create(path)
 ## prefix and without a prefix for general search. Use the 'id_NUMBER'
 ## as unique identifier. Store all the fields as JSON for display
 ## purposes.
-xindex(. ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
+db <- xindex(. ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
 
-## Run a search
-result <- xsearch("watch", path)
-
-## Display something about each match.
-sapply(result, function(x) {
-    sprintf("#%3.3i %s", x$docid, fromJSON(x$data)$TITLE)
-})
+## Run a search and display docid (rowname) and TITLE from each match
+xsearch("watch", db, TITLE ~ .)
 ```
 
 ## Installation
