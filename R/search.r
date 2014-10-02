@@ -72,8 +72,8 @@ search_plan <- function(formula) {
 ##'
 ##' @rdname xsearch-methods
 ##' @docType methods
-##' @param query A free-text query
 ##' @param db A \code{linkS4class{xapian_database}} object.
+##' @param query A free-text query
 ##' @param prefix A formula specification with term prefixes. Default
 ##' NULL. See 'Details'.
 ##' @param offset Starting point within result set. Default 0.
@@ -93,9 +93,9 @@ search_plan <- function(formula) {
 ##' @import plyr
 ##' @include S4_classes.r
 setGeneric("xsearch",
-           signature = c("query", "db"),
-           function(query,
-                    db,
+           signature = c("db", "query"),
+           function(db,
+                    query,
                     prefix   = NULL,
                     offset   = 0,
                     pagesize = 10,
@@ -106,10 +106,10 @@ setGeneric("xsearch",
 ##' @rdname xsearch-methods
 ##' @export
 setMethod("xsearch",
-          signature(query = "character",
-                    db    = "xapian_database"),
-          function(query,
-                   db,
+          signature(db    = "xapian_database",
+                    query = "character"),
+          function(db,
+                   query,
                    prefix,
                    offset,
                    pagesize,

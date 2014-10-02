@@ -2,19 +2,19 @@
 \docType{methods}
 \name{xsearch}
 \alias{xsearch}
-\alias{xsearch,character,xapian_database-method}
+\alias{xsearch,xapian_database,character-method}
 \title{Search a Xapian database}
 \usage{
-xsearch(query, db, prefix = NULL, offset = 0, pagesize = 10,
+xsearch(db, query, prefix = NULL, offset = 0, pagesize = 10,
   wildcard = FALSE, view = FALSE)
 
-\S4method{xsearch}{character,xapian_database}(query, db, prefix = NULL,
+\S4method{xsearch}{xapian_database,character}(db, query, prefix = NULL,
   offset = 0, pagesize = 10, wildcard = FALSE, view = FALSE)
 }
 \arguments{
-\item{query}{A free-text query}
-
 \item{db}{A \code{linkS4class{xapian_database}} object.}
+
+\item{query}{A free-text query}
 
 \item{prefix}{A formula specification with term prefixes. Default
 NULL. See 'Details'.}
