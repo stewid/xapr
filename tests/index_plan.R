@@ -146,7 +146,7 @@ str(ip_9_obs)
 stopifnot(identical(ip_9_obs, ip_9_exp))
 
 ##
-## Test case 9
+## Test case 10
 ##
 ip_10_exp <- structure(list(data = 1:12, text = 1:12, prefix = structure(
                        list(lbl = character(0), col = integer(0),
@@ -155,3 +155,29 @@ ip_10_exp <- structure(list(data = 1:12, text = 1:12, prefix = structure(
 ip_10_obs <- xapr:::index_plan(.~., cols)
 str(ip_10_obs)
 stopifnot(identical(ip_10_obs, ip_10_exp))
+
+##
+## Test case 11
+##
+ip_11_exp <- structure(list(data = c(3L, 9L), text = c(3L, 9L), prefix = structure(
+                       list(lbl = c("S", "XDESCRIPTION"), col = c(3L, 9L),
+                       wdf = c(1L, 1L)), .Names = c("lbl", "col", "wdf")), id = 1L),
+                       .Names = c("data", "text", "prefix", "id"))
+ip_11_obs <-
+    xapr:::index_plan(TITLE + DESCRIPTION ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER,
+                      cols)
+str(ip_11_obs)
+stopifnot(identical(ip_11_obs, ip_11_exp))
+
+##
+## Test case 12
+##
+ip_12_exp <- structure(list(data = 1:12, text = c(3L, 9L), prefix = structure(
+                       list(lbl = c("S", "XDESCRIPTION"), col = c(3L, 9L),
+                       wdf = c(1L, 1L)), .Names = c("lbl", "col", "wdf")), id = 1L),
+                       .Names = c("data", "text", "prefix", "id"))
+ip_12_obs <-
+    xapr:::index_plan(TITLE + DESCRIPTION + . ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER,
+                      cols)
+str(ip_12_obs)
+stopifnot(identical(ip_12_obs, ip_12_exp))

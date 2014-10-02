@@ -28,18 +28,29 @@ index_plan <- function(formula, colnames) {
     ## Help function to extract the data column
     data_column <- function(data, colnames) {
         if (!is.null(data)) {
+            ## Handle "col1 + col2" etc
+            data <- unlist(strsplit(data, "+", fixed=TRUE))
+            data <- sub("^\\s", "", sub("\\s$", "", data))
+
+            ## Replace dot with all colnames
             data <- unlist(lapply(data, function(col) {
                 if (identical(col, "."))
                     col <- colnames
                 col
             }))
+            data <- unique(data)
 
-            data <- match(unique(data), colnames)
+            ## Map the column names to column index
+            data <- match(data, colnames)
+
             ## Check that all column names are mapped
             if (any(sapply(data, is.null)))
                 stop("Invalid index formula")
             if (any(sapply(data, is.na)))
                 stop("Invalid index formula")
+
+            ## Sort them in the same order as colnames
+            data <- sort(data)
         }
         data
     }
