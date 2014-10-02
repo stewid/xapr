@@ -73,7 +73,7 @@ dir.create(path)
 db <- xindex(. ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
 
 ## Run a search and display docid (rowname) and TITLE from each match
-xsearch("watch", db, TITLE ~ .)
+xsearch(db, "watch", TITLE ~ .)
 ```
 
 ```
@@ -85,6 +85,47 @@ xsearch("watch", db, TITLE ~ .)
 #> 15  Ingersoll "Dan Dare" automaton pocket watch with pin-pallet
 #> 36             Universal 'Tri-Compax' chronographic wrist watch
 #> 46  Model by Dent of mechanism for setting hands and winding up
+```
+
+```r
+## Run a search with multiple words
+xsearch(db, "Dent watch", TITLE ~ .)
+```
+
+```
+#>                                                                     TITLE
+#> 46            Model by Dent of mechanism for setting hands and winding up
+#> 4                                    Watch with Chinese duplex escapement
+#> 18            Solar/Sidereal verge watch with epicyclic maintaining power
+#> 13                                                       Watch timer by P
+#> 94                                Model of a Lever Escapement , 1850-1883
+#> 33           A device by Favag of Neuchatel which enables a stop watch to
+#> 93                       Model of Graham's Cylinder Escapement, 1850-1883
+#> 15            Ingersoll "Dan Dare" automaton pocket watch with pin-pallet
+#> 36                       Universal 'Tri-Compax' chronographic wrist watch
+#> 86 Model representing Earnshaw's detent chronometer escapement, 1950-1883
+```
+
+```r
+## Run a search with prefix
+xsearch(db, "title:sunwatch", TITLE ~ title:S)
+```
+
+```
+#>                                    TITLE
+#> 1 Ansonia Sunwatch (pocket compass dial)
+```
+
+```r
+## Run a search with multiple prefixes
+xsearch(db,
+        "description:\"leather case\" AND title:sundial",
+        TITLE ~ title:S + description:XDESCRIPTION)
+```
+
+```
+#>                                      TITLE
+#> 55 Silver altitude sundial in leather case
 ```
 
 ## Installation
