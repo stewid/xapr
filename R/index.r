@@ -252,8 +252,22 @@ index_plan <- function(formula, colnames) {
 ##' ## purposes.
 ##' db <- xindex(. ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
 ##'
-##' ## Run a search
-##' xsearch("watch", db, id_NUMBER + TITLE ~ .)
+##' ## Display a summary of the Xapian database
+##' summary(db)
+##'
+##' ## Run a search and display docid (rowname) and TITLE from each match
+##' xsearch(db, "watch", TITLE ~ .)
+##'
+##' ## Run a search with multiple words
+##' xsearch(db, "Dent watch", TITLE ~ .)
+##'
+##' ## Run a search with prefix
+##' xsearch(db, "title:sunwatch", TITLE ~ title:S)
+##'
+##' ## Run a search with multiple prefixes
+##' xsearch(db,
+##'         "description:\"leather case\" AND title:sundial",
+##'         TITLE ~ title:S + description:XDESCRIPTION)
 ##' }
 xindex <- function(formula,
                    data,

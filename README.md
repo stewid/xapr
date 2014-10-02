@@ -72,6 +72,23 @@ dir.create(path)
 ## purposes.
 db <- xindex(. ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
 
+## Display a summary of the Xapian database
+summary(db)
+```
+
+```
+#> Xapian database:  /tmp/Rtmp0MGgDV/xapr-71871696f87e
+#>
+#> UUID = fd64f527-443d-49b7-bdf4-607b34cc9470
+#> number of documents = 100
+#> average document length = 52
+#> document length lower bound = 16
+#> document length upper bound = 136
+#> highest document id ever used = 100
+#> has positional information = TRUE
+```
+
+```r
 ## Run a search and display docid (rowname) and TITLE from each match
 xsearch(db, "watch", TITLE ~ .)
 ```

@@ -62,6 +62,49 @@ void xapr_error(const char *format, const char *func_name, const char *arg)
 }
 
 /*
+ * Summary of a Xapian database
+ *
+ * @param path A character vector specifying the path to one or more
+ * Xapian databases.
+ * @return list with summary result
+ */
+extern "C" SEXP
+xapr_summary(SEXP path)
+{
+    size_t i = 0;
+    SEXP result = R_NilValue;
+    SEXP names  = R_NilValue;
+    Database db;
+
+    size_t n = length(path);
+    for (size_t i = 0; i < n; ++i)
+        db.add_database(Database(CHAR(STRING_ELT(path, i))));
+
+    n = 7;
+    PROTECT(result = allocVector(VECSXP, n));
+    PROTECT(names = allocVector(STRSXP, n));
+    SET_VECTOR_ELT(result, i,   ScalarString(mkChar(db.get_uuid().c_str())));
+    SET_STRING_ELT(names,  i++, mkChar("UUID"));
+    SET_VECTOR_ELT(result, i,   ScalarInteger(db.get_doccount()));
+    SET_STRING_ELT(names,  i++, mkChar("doccount"));
+    SET_VECTOR_ELT(result, i,   ScalarInteger(db.get_avlength()));
+    SET_STRING_ELT(names,  i++, mkChar("avlength"));
+    SET_VECTOR_ELT(result, i,   ScalarInteger(db.get_doclength_lower_bound()));
+    SET_STRING_ELT(names,  i++, mkChar("doclength_lower_bound"));
+    SET_VECTOR_ELT(result, i,   ScalarInteger(db.get_doclength_upper_bound()));
+    SET_STRING_ELT(names,  i++, mkChar("doclength_upper_bound"));
+    SET_VECTOR_ELT(result, i,   ScalarInteger(db.get_lastdocid()));
+    SET_STRING_ELT(names,  i++, mkChar("lastdocid"));
+    SET_VECTOR_ELT(result, i,   ScalarLogical(db.has_positions()));
+    SET_STRING_ELT(names,  i++, mkChar("has_positions"));
+
+    setAttrib(result, R_NamesSymbol, names);
+    UNPROTECT(2);
+
+    return result;
+}
+
+/*
  * Search a Xapian database
  *
  * @param query_string A free-text query

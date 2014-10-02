@@ -71,6 +71,9 @@ dir.create(path)
 ## purposes.
 db <- xindex(. ~ S*TITLE + X*DESCRIPTION + Q:id_NUMBER, nmsi, path)
 
+## Display a summary of the Xapian database
+summary(db)
+
 ## Run a search and display docid (rowname) and TITLE from each match
 xsearch(db, "watch", TITLE ~ .)
 

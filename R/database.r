@@ -46,6 +46,21 @@ setMethod("summary",
           function(object, ...)
           {
               show(object)
+
+              cat("\n")
+
+              result <- .Call("xapr_summary",
+                              object@path,
+                              package = "xapr")
+
+              cat("UUID =", result[["UUID"]], "\n")
+              cat("number of documents =", result[["doccount"]], "\n")
+              cat("average document length =", result[["avlength"]], "\n")
+              cat("document length lower bound =", result[["doclength_lower_bound"]], "\n")
+              cat("document length upper bound =", result[["doclength_upper_bound"]], "\n")
+              cat("highest document id ever used =", result[["lastdocid"]], "\n")
+              cat("has positional information =", result[["has_positions"]], "\n")
+
               cat("\n")
           }
 )
