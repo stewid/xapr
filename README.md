@@ -17,8 +17,8 @@ The index plan is specified symbolically. An index plan has the form
 `data ~ terms` where `data` is the blob of data returned from a search
 and the `terms` are the basis for a search in Xapian. A first order
 term index the text in the column as free text. A specification of the
-form `first:second` indicates that the text in `second` should be
-indexed with prefix `first`.
+form `prefix:term` indicates that the text in `term` should be
+indexed with the prefix `prefix`.
 
 The prefix is a short string at the beginning of the term to indicate
 which field the term indexes. Valid prefixes are: 'A' ,'D', 'E', 'G',
@@ -26,13 +26,13 @@ which field the term indexes. Valid prefixes are: 'A' ,'D', 'E', 'G',
 'X', 'Y' and 'Z'. See http://xapian.org/docs/omega/termprefixes for a
 list of conventional prefixes.
 
-The specification `first*second` is the same as `second +
-first:second`. The prefix `X` will create a user defined prefix by
-appending the uppercase `second` to `X`. The prefix `Q` will use data
-in the `second` column as a unique identifier for the document. `NA`
+The specification `prefix*term` is the same as `term +
+prefix:term`. The prefix `X` will create a user defined prefix by
+appending the uppercase `term` to `X`. The prefix `Q` will use data
+in the `term` column as a unique identifier for the document. `NA`
 values in indexed columns are skipped.
 
-No response e.g. `~ second + first:second` writes the row number as
+No response e.g. `~ term + prefix:term` writes the row number as
 data to the document.
 
 The specification `~X*.` creates prefix terms with all columns plus
@@ -77,14 +77,14 @@ summary(db)
 ```
 
 ```
-#> Xapian database:  /tmp/Rtmp0MGgDV/xapr-71871696f87e
-#>
-#> UUID = fd64f527-443d-49b7-bdf4-607b34cc9470
-#> number of documents = 100
-#> average document length = 52
-#> document length lower bound = 16
-#> document length upper bound = 136
-#> highest document id ever used = 100
+#> Xapian database:  /tmp/RtmpM0X7Iy/xapr-dec6f67a096 
+#> 
+#> UUID = 1f8d9886-6b4d-45aa-bb9f-b9e84b27bb89 
+#> number of documents = 100 
+#> average document length = 52 
+#> document length lower bound = 16 
+#> document length upper bound = 136 
+#> highest document id ever used = 100 
 #> has positional information = TRUE
 ```
 
