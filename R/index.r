@@ -33,13 +33,33 @@ index_plan <- function(formula, colnames) {
             data <- unlist(strsplit(data, "+", fixed=TRUE))
             data <- sub("^\\s", "", sub("\\s$", "", data))
 
+            ## Handle "col1 - col2" etc
+            include <- NULL
+            remove <- NULL
+            lapply(strsplit(data, "-"), function(x) {
+                x <- sub("^\\s", "", sub("\\s$", "", x))
+                include <<- c(include, x[1])
+                remove <<- c(remove, x[-1])
+            })
+
             ## Replace dot with all colnames
-            data <- unlist(lapply(data, function(col) {
+            include <- unlist(lapply(include, function(col) {
                 if (identical(col, "."))
                     col <- colnames
                 col
             }))
-            data <- unique(data)
+            include <- unique(include)
+
+            ## Replace dot with all colnames
+            remove <- unlist(lapply(remove, function(col) {
+                if (identical(col, "."))
+                    col <- colnames
+                col
+            }))
+            remove <- unique(remove)
+
+            ## remove columns from include
+            data <- include[!(include %in% remove)]
 
             ## Map the column names to column index
             data <- match(data, colnames)
@@ -52,6 +72,9 @@ index_plan <- function(formula, colnames) {
 
             ## Sort them in the same order as colnames
             data <- sort(data)
+
+            if (!length(data))
+                data <- NULL
         }
         data
     }
