@@ -21,11 +21,8 @@
 ##' @param formula The term prefixes formula specification.
 ##' @return :TODO:DOCUMENTATION:
 ##' @keywords internal
+##' @include prefixes.r
 search_plan <- function(formula) {
-    term_prefixes <- c("A" ,"D", "E", "G", "H", "I", "K", "L", "M",
-                       "N", "O", "P", "Q", "R", "S", "T", "U", "V",
-                       "X", "Y", "Z")
-
     ## Extract response variable
     response <- attr(terms(formula, allowDotAsName = TRUE), "response")
     if (response) {
@@ -46,9 +43,9 @@ search_plan <- function(formula) {
                      function(prefix) {
                          ## Make sure the first term is the prefix
                          prefix <- unlist(strsplit(prefix, ":"))
-                         if (substr(prefix[1], 1, 1) %in% term_prefixes)
+                         if (substr(prefix[1], 1, 1) %in% term_prefixes())
                              return(paste0(rev(prefix), collapse=":"))
-                         if (substr(prefix[2], 1, 1) %in% term_prefixes)
+                         if (substr(prefix[2], 1, 1) %in% term_prefixes())
                              return(paste0(prefix, collapse=":"))
                          stop("Invalid search formula")
                      })
@@ -74,8 +71,8 @@ search_plan <- function(formula) {
 ##' @docType methods
 ##' @param db A \code{linkS4class{xapian_database}} object.
 ##' @param query A free-text query
-##' @param prefix A formula specification with term prefixes. Default
-##' NULL. See 'Details'.
+##' @param formula A formula with symbolic specification of the data
+##' output and term prefixes. Default NULL. See 'Details'.
 ##' @param offset Starting point within result set. Default 0.
 ##' @param pagesize Number of records to retrieve. Default 10.
 ##' @param wildcard Support searches using a trailing '*' wildcard,
@@ -88,7 +85,10 @@ search_plan <- function(formula) {
 ##' variables supplied in the prefix formula.
 ##' @return \code{xapian_search} object with result
 ##' @keywords methods
-##' @details The term prefixes are specified symbolically. The
+##' @details The search plan for \code{xsearch} is specified
+##' symbolically. A search plan has the form \code{data ~
+##' field:prefix} where \code{data} is the blob of data returned from
+##' a request The term prefixes are specified symbolically. The
 ##' prefixes has the form '~field:prefix'.
 ##' @import plyr
 ##' @include S4_classes.r

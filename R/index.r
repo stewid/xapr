@@ -24,6 +24,7 @@
 ##' @return list with column names for data, text, prefixes and
 ##' identifiers.
 ##' @keywords internal
+##' @include prefixes.r
 index_plan <- function(formula, colnames) {
     ## Help function to extract the data column
     data_column <- function(data, colnames) {
@@ -136,10 +137,6 @@ index_plan <- function(formula, colnames) {
         sort(text)
     }
 
-    term_prefixes <- c("A" ,"D", "E", "G", "H", "I", "K", "L", "M",
-                       "N", "O", "P", "Q", "R", "S", "T", "U", "V",
-                       "X", "Y", "Z")
-
     ## Extract response variable
     response <- attr(terms(formula, allowDotAsName = TRUE), "response")
     if (response) {
@@ -153,7 +150,7 @@ index_plan <- function(formula, colnames) {
     ## name equal to a term_prefix.
     text <- attr(terms(formula, allowDotAsName = TRUE), "term.labels")
     text <- text[attr(terms(formula, allowDotAsName = TRUE), "order") == 1]
-    text <- text[!(text %in% term_prefixes)]
+    text <- text[!(text %in% term_prefixes())]
 
     ## Extract columns to prefix
     prefix <- attr(terms(formula, allowDotAsName = TRUE), "term.labels")
@@ -162,9 +159,9 @@ index_plan <- function(formula, colnames) {
                        function(prefix) {
                            ## Make sure the first term is the prefix
                            prefix <- unlist(strsplit(prefix, ":"))
-                           if (prefix[1] %in% term_prefixes)
+                           if (prefix[1] %in% term_prefixes())
                                return(paste0(prefix, collapse=":"))
-                           if (prefix[2] %in% term_prefixes)
+                           if (prefix[2] %in% term_prefixes())
                                return(paste0(rev(prefix), collapse=":"))
                            stop("Invalid index formula")
                        })
