@@ -40,7 +40,9 @@ free text.
 
 If the response contains more than one column, e.g. `col_1 + col_2 ~
 X*.` the response is first converted to `JSON`. A compact form to
-convert all fields to `JSON` is to use `. ~ terms`.
+convert all fields to `JSON` is to use `. ~ terms`. It is also
+possible to drop response fields e.g. `. - col_1 - col_2 ~ X*.` to
+include all fields in the response except `col_1` and `col_2`.
 
 ### Example
 

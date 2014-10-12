@@ -40,7 +40,9 @@ free text.
 
 If the response contains more than one column, e.g. `col_1 + col_2 ~
 X*.` the response is first converted to `JSON`. A compact form to
-convert all fields to `JSON` is to use `. ~ terms`.
+convert all fields to `JSON` is to use `. ~ terms`. It is also
+possible to drop response fields e.g. `. - col_1 - col_2 ~ X*.` to
+include all fields in the response except `col_1` and `col_2`.
 
 ### Example
 
@@ -77,9 +79,9 @@ summary(db)
 ```
 
 ```
-#> Xapian database:  /tmp/RtmpM0X7Iy/xapr-dec6f67a096 
+#> Xapian database:  /tmp/RtmptKuP0H/xapr-571943469c22 
 #> 
-#> UUID = 1f8d9886-6b4d-45aa-bb9f-b9e84b27bb89 
+#> UUID = ba28e8ea-7d8c-4566-b5ff-9c28a1bd437d 
 #> number of documents = 100 
 #> average document length = 52 
 #> document length lower bound = 16 
