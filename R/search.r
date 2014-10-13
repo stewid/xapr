@@ -158,6 +158,12 @@ setMethod("xsearch",
             result <- as.data.frame(result, stringsAsFactors = FALSE)
             colnames(result) <- sp$data
         }
+    } else if (length(result)) {
+        rn <- sapply(result, "[[", "docid")
+        result <- sapply(result, function(x) {
+            fromJSON(x$data)
+        })
+        names(result) <- rn
     }
 
     result
