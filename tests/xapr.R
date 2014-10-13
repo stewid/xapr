@@ -31,10 +31,7 @@ stopifnot(identical(xsearch(db, "Widgren"), NULL))
 
 ## Expect one hit.
 stopifnot(identical(xsearch(db, "author:Widgren",  ~author:A),
-                    structure(list(structure(list(docid = 1L,
-                    rank = 0L, percent = 100L, data = "This is a test"),
-                    .Names = c( "docid", "rank", "percent", "data"),
-                    class = "xapian_match")), class = "xapian_search")))
+                    structure("This is a test", .Names = "1")))
 
 ## Expect no hit without prefix: NULL
 stopifnot(identical(xsearch(db, "author:Widgren"), NULL))
