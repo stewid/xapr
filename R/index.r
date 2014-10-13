@@ -239,10 +239,12 @@ index_plan <- function(formula, colnames) {
 ##' The specification '~X*.' creates prefix terms with all columns
 ##' plus free text.
 ##'
-##' If the response contains more than one column, e.g. 'col_1 + col_2
+##' If the response contains one or more columns, e.g. 'col_1 + col_2
 ##' ~ X*.' the response is first converted to 'JSON'. A compact form
 ##' to convert all fields to 'JSON' and to enable free text search on
-##' all fields is to use '.~.'.
+##' all fields is to use '.~.'. It is also possible to drop response
+##' fields e.g. '. - col_1 - col_2 ~ X*.' to include all fields in the
+##' response except 'col_1' and 'col_2'.
 ##' @include S4_classes.r
 ##' @export
 ##' @examples
@@ -326,9 +328,7 @@ xindex <- function(formula,
 
     ip <- index_plan(formula, colnames(data))
 
-    if (length(ip$data) == 1L) {
-        doc_data <- as.character(data[, ip$data[1]])
-    } else if (length(ip$data) > 1L) {
+    if (length(ip$data)) {
         doc_data <- sapply(seq_len(nrow(data)), function(i) {
             toJSON(data[i, ip$data])
         })
