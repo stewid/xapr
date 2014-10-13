@@ -38,7 +38,7 @@ data to the document.
 The specification `~X*.` creates prefix terms with all columns plus
 free text.
 
-If the response contains more than one column, e.g. `col_1 + col_2 ~
+If the response contains one or more columns, e.g. `col_1 + col_2 ~
 X*.` the response is first converted to `JSON`. A compact form to
 convert all fields to `JSON` is to use `. ~ terms`. It is also
 possible to drop response fields e.g. `. - col_1 - col_2 ~ X*.` to

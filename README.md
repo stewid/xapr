@@ -38,7 +38,7 @@ data to the document.
 The specification `~X*.` creates prefix terms with all columns plus
 free text.
 
-If the response contains more than one column, e.g. `col_1 + col_2 ~
+If the response contains one or more columns, e.g. `col_1 + col_2 ~
 X*.` the response is first converted to `JSON`. A compact form to
 convert all fields to `JSON` is to use `. ~ terms`. It is also
 possible to drop response fields e.g. `. - col_1 - col_2 ~ X*.` to
@@ -79,9 +79,9 @@ summary(db)
 ```
 
 ```
-#> Xapian database:  /tmp/RtmptKuP0H/xapr-571943469c22 
+#> Xapian database:  /tmp/RtmpQj6AiY/xapr-42511a902906 
 #> 
-#> UUID = ba28e8ea-7d8c-4566-b5ff-9c28a1bd437d 
+#> UUID = b4f5fc81-5f84-40d6-886e-2c096a09c232 
 #> number of documents = 100 
 #> average document length = 52 
 #> document length lower bound = 16 
