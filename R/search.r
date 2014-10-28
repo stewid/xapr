@@ -88,8 +88,11 @@ search_plan <- function(formula) {
 ##' @details The search plan for \code{xsearch} is specified
 ##' symbolically. A search plan has the form \code{data ~
 ##' field:prefix} where \code{data} is the blob of data returned from
-##' a request The term prefixes are specified symbolically. The
-##' prefixes has the form '~field:prefix'.
+##' a request as a \code{data.frame}. The columns of the
+##' \code{data.frame} can be specified, e.g. 'col1 + col2 ~
+##' field:prefix'. To search prefixed terms it possible to add a
+##' human-readable prefix; for example 'data ~ title:S' to enable
+##' queries such as 'title:xapr'.
 ##' @import plyr
 ##' @include S4_classes.r
 setGeneric("xsearch",
