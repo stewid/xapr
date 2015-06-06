@@ -22,7 +22,6 @@
 #include <Rinternals.h>
 
 using namespace Xapian;
-using namespace std;
 
 const char xapr_err_integer_gte_zero_arg[] =
     "Error in '%s': '%s' must be an integer vector of length one with "
@@ -251,7 +250,7 @@ xapr_index(
         Document document;
 
         if (R_NilValue == data) {
-            ostringstream buf;
+            std::ostringstream buf;
             buf << (row + 1); // Give the 1-based row number in the data.frame
             document.set_data(buf.str());
         } else {
