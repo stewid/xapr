@@ -4,3 +4,6 @@
 ^\.travis\.yml$
 ^travis-tool\.sh$
 ^Makefile$
+^.*\.Rproj$
+^\.Rproj\.user$
+^windows$

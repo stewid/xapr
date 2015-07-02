@@ -1,2 +1,5 @@
 /src/xapr.o
 /src/xapr.so
+/src/xapr.dll
+.Rproj.user
+windows
