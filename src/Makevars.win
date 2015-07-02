@@ -1,0 +1,10 @@
+PKG_CPPFLAGS= -I../windows/xapian-core-1.2.21/include
+PKG_LIBS= -L../windows/xapian-core-1.2.21/lib${R_ARCH} -lxapian -lz -lws2_32 -lRpcrt4
+
+all: clean winlibs
+
+clean:
+	rm -f $(OBJECTS) xapr.dll
+
+winlibs:
+	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R"
