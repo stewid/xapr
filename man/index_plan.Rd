@@ -20,4 +20,3 @@ identifiers.
 Extract the index plan from a formula specification.
 }
 \keyword{internal}
-

@@ -13,4 +13,3 @@ Character vector with valid term prefixes
 See \url{http://xapian.org/docs/omega/termprefixes}
 }
 \keyword{internal}
-

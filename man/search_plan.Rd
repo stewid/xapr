@@ -16,4 +16,3 @@ search_plan(formula)
 Extract the term prefixes
 }
 \keyword{internal}
-

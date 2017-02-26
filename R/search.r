@@ -1,5 +1,5 @@
 ## xapr, R bindings to the Xapian search engine.
-## Copyright (C) 2014 Stefan Widgren
+## Copyright (C) 2014 - 2017 Stefan Widgren
 ##
 ##  xapr is free software; you can redistribute it and/or modify
 ##  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@
 ##' @param formula The term prefixes formula specification.
 ##' @return :TODO:DOCUMENTATION:
 ##' @keywords internal
+##' @importFrom stats terms
+##' @importFrom utils edit
 ##' @include prefixes.r
 search_plan <- function(formula) {
     ## Extract response variable

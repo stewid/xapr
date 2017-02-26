@@ -8,4 +8,3 @@
 \description{
 Access the Xapian search engine from R
 }
-

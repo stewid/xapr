@@ -51,4 +51,3 @@ human-readable prefix; for example 'data ~ title:S' to enable
 queries such as 'title:xapr'.
 }
 \keyword{methods}
-

@@ -114,4 +114,3 @@ xsearch(db,
         TITLE ~ title:S + description:XDESCRIPTION)
 }
 }
-

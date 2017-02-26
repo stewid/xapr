@@ -15,6 +15,6 @@ Class \code{"xapian_database"}
   }
 }
 }
+
 \keyword{classes}
 \keyword{methods}
-

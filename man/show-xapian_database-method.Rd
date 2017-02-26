@@ -18,4 +18,3 @@ None (invisible 'NULL').
 Brief summary of Xapian database
 }
 \keyword{methods}
-
