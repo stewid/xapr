@@ -4,7 +4,7 @@
 
 `xapr` is an R package that provides an interface to the
 [Xapian](http://xapian.org/) search engine from R, allowing both
-indexing and retrievel operations. A great introduction to
+indexing and retrieval operations. A great introduction to
 [Xapian](http://xapian.org/) is the
 [Getting Started with Xapian](http://getting-started-with-xapian.readthedocs.org/en/latest/).
 
